@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "menuicon"; /* Project id 3837139 */
+  src: url('iconfont.woff2?t=1671775906452') format('woff2'),
+       url('iconfont.woff?t=1671775906452') format('woff'),
+       url('iconfont.ttf?t=1671775906452') format('truetype');
+}
+
+.menuicon {
+  font-family: "menuicon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-lunbotu:before {
+  content: "\e600";
+}
+
+.icon-gaodeditu:before {
+  content: "\e601";
+}
+
+.icon-guifan:before {
+  content: "\e602";
+}
+
+.icon-fazhanlicheng:before {
+  content: "\e603";
+}
+
+.icon-dianhua:before {
+  content: "\e604";
+}
+
+.icon-yunkongjian:before {
+  content: "\e605";
+}
+
+.icon-zhuti:before {
+  content: "\e606";
+}
+
+.icon-wenjianguanli:before {
+  content: "\e607";
+}
+
+.icon-yuedu:before {
+  content: "\e608";
+}
+
+.icon-shenghuofuwu:before {
+  content: "\e609";
+}
+
+.icon-beiwanglu:before {
+  content: "\e60a";
+}
+
+.icon-yinle:before {
+  content: "\e60b";
+}
+
+.icon-yundongjiankang:before {
+  content: "\e60c";
+}
+
+.icon-wanjijiqiao:before {
+  content: "\e60d";
+}
+
