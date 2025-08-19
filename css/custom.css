@@ -1,0 +1,263 @@
+/* 页脚与头图透明 */
+#footer {
+  background-color: rgb(0, 0, 0, 0.3);
+  backdrop-filter: blur(3px) saturate(100%);
+  -webkit-backdrop-filter: blur(3px) saturate(100%);
+}
+
+#page-header {
+  background: transparent;
+  background-image: none !important;
+}
+
+/* 夜间模式页脚页头遮罩透明 */
+[data-theme="dark"] #footer{
+  background: transparent;
+}
+
+/* 夜间模式页脚页头遮罩透明 */
+[data-theme="dark"] #footer::before{
+  background: transparent;
+}
+[data-theme="dark"] #page-header::before {
+  background: transparent;
+}
+
+/* 夜间模式菜单栏发光字 */
+[data-theme="dark"] #nav .site-page,
+[data-theme="dark"] #nav .menus_items .menus_item .menus_item_child li a {
+  text-shadow: 0 0 2px var(--lanly-theme) !important;
+}
+
+/* 手机端适配 */
+[data-theme="dark"] #sidebar #sidebar-menus .menus_items .site-page {
+  text-shadow: 0 0 2px var(--lanly-theme) !important;
+}
+
+/* 一级菜单居中 */
+#nav .menus_items {
+  position: absolute !important;
+  width: fit-content !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+/* 子菜单横向展示 */
+#nav .menus_items .menus_item:hover .menus_item_child {
+  display: flex !important;
+}
+/* 这里的2是代表导航栏的第2个元素，即有子菜单的元素，可以按自己需求修改 */
+.menus_items .menus_item:nth-child(2) .menus_item_child {
+  left: -90px;
+}
+
+.menus_items .menus_item:nth-child(3) .menus_item_child {
+  left: -130px;
+}
+.menus_items .menus_item:nth-child(4) .menus_item_child {
+  left: -40px;
+}
+
+/* 侧边栏个人信息卡片动态渐变色 */
+#aside-content > .card-widget.card-info {
+  background: var(--lanly-card-bg);
+  box-shadow: var(--lanly-shadow-lightblack);
+  position: relative;
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 10s ease infinite;
+  -moz-animation: Gradient 10s ease infinite;
+  animation: Gradient 10s ease infinite !important;
+}
+@-webkit-keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 个人信息Follow me按钮 */
+#aside-content > .card-widget.card-info > #card-info-btn {
+  background-color: var(--lanly-gray);
+  border-radius: 8px;
+}
+
+#aside-content > .card-widget.card-info > #card-info-btn:hover {
+  background-color: var(--lanly-card-btn-hover);
+}
+
+
+/* 首页文章卡片 */
+#recent-posts > .recent-post-item {
+  background: var(--lanly-card-bg);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 25px;
+  border: var(--style-border-always);
+  box-shadow: var(--lanly-shadow-light2black);
+}
+
+#recent-posts > .recent-post-item:hover {
+  border: var(--style-border-hover);
+}
+
+/* 首页侧栏卡片 */
+#aside-content .card-widget {
+  background: var(--lanly-card-bg);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 18px;
+  border: var(--style-border-always)
+}
+
+/* 文章页、归档页、普通页面 */
+div#post,
+div#page,
+div#archive {
+  background: var(--lanly-card-bg);
+  backdrop-filter: var(--backdrop-filter);
+  border: var(--style-border-always);
+  border-radius: 20px;
+}
+
+/* 导航栏 */
+#page-header.nav-fixed #nav {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: var(--backdrop-filter);
+}
+
+/* 阅读模式 */
+.read-mode #aside-content .card-widget {
+  background: rgba(158, 204, 171, 0.5) !important;
+}
+.read-mode div#post {
+  background: rgba(158, 204, 171, 0.5) !important;
+}
+
+/* 夜间模式下的阅读模式 */
+[data-theme="dark"] .read-mode #aside-content .card-widget {
+  background: rgba(25, 25, 25, 0.9) !important;
+  color: #ffffff;
+}
+[data-theme="dark"] .read-mode div#post {
+  background: rgba(25, 25, 25, 0.9) !important;
+  color: #ffffff;
+}
+
+
+/* 文章页H1-H6图标样式效果 */
+/* 控制风车转动速度 4s那里可以自己调节快慢 */
+h1::before,
+h2::before,
+h3::before,
+h4::before,
+h5::before,
+h6::before {
+  -webkit-animation: ccc 4s linear infinite;
+  animation: ccc 4s linear infinite;
+}
+/* 控制风车转动方向 -1turn 为逆时针转动，1turn 为顺时针转动，相同数字部分记得统一修改 */
+@-webkit-keyframes ccc {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(-1turn);
+    transform: rotate(-1turn);
+  }
+}
+@keyframes ccc {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(-1turn);
+    transform: rotate(-1turn);
+  }
+}
+/* 设置风车颜色 */
+#content-inner.layout h1::before {
+  color: #ef50a8;
+  margin-left: -1.55rem;
+  font-size: 1.3rem;
+  margin-top: -0.23rem;
+}
+#content-inner.layout h2::before {
+  color: #fb7061;
+  margin-left: -1.35rem;
+  font-size: 1.1rem;
+  margin-top: -0.12rem;
+}
+#content-inner.layout h3::before {
+  color: #ffbf00;
+  margin-left: -1.22rem;
+  font-size: 0.95rem;
+  margin-top: -0.09rem;
+}
+#content-inner.layout h4::before {
+  color: #a9e000;
+  margin-left: -1.05rem;
+  font-size: 0.8rem;
+  margin-top: -0.09rem;
+}
+#content-inner.layout h5::before {
+  color: #57c850;
+  margin-left: -0.9rem;
+  font-size: 0.7rem;
+  margin-top: 0rem;
+}
+#content-inner.layout h6::before {
+  color: #5ec1e0;
+  margin-left: -0.9rem;
+  font-size: 0.66rem;
+  margin-top: 0rem;
+}
+/* s设置风车hover动效 6s那里可以自己调节快慢*/
+#content-inner.layout h1:hover,
+#content-inner.layout h2:hover,
+#content-inner.layout h3:hover,
+#content-inner.layout h4:hover,
+#content-inner.layout h5:hover,
+#content-inner.layout h6:hover {
+  color: var(--lanly-theme);
+}
+#content-inner.layout h1:hover::before,
+#content-inner.layout h2:hover::before,
+#content-inner.layout h3:hover::before,
+#content-inner.layout h4:hover::before,
+#content-inner.layout h5:hover::before,
+#content-inner.layout h6:hover::before {
+  color: var(--lanly-theme);
+  -webkit-animation: ccc 6s linear infinite;
+  animation: ccc 6s linear infinite;
+}
+
+.loading-img {
+  background: url(/img/avatar.jpg) no-repeat center center;
+  background-size: cover;
+}

@@ -1,0 +1,484 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Webots——PRM算法 | Lanlyの小窝</title><meta name="author" content="Lanly"><meta name="copyright" content="Lanly"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="将世界化连续为离散">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webots——PRM算法">
+<meta property="og:url" content="http://blog.lanly.vip/posts/d2cfe463.html">
+<meta property="og:site_name" content="Lanlyの小窝">
+<meta property="og:description" content="将世界化连续为离散">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.lanly.vip/img/chino/vec/chino55.jpg">
+<meta property="article:published_time" content="2022-05-11T08:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-19T07:22:39.167Z">
+<meta property="article:author" content="Lanly">
+<meta property="article:tag" content="Webots">
+<meta property="article:tag" content="PRM">
+<meta property="article:tag" content="Probabilistic Roadmaps">
+<meta property="article:tag" content="Pure Pursuit">
+<meta property="article:tag" content="OpenCV">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.lanly.vip/img/chino/vec/chino55.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.lanly.vip/posts/d2cfe463.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Webots——PRM算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-19 15:22:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/var.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/menuicon.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/essay.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/home_essay_bar.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Lanlyの小窝" type="application/atom+xml">
+</head><body><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><div class="loading-img"></div><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+
+preloader.initLoading()
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><script async="async" data-pjax="data-pjax" src="/js/WaterRipple.js"></script><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/chino/vec/chino55.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Lanlyの小窝"><span class="site-name">Lanlyの小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Webots——PRM算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-11T08:00:00.000Z" title="发表于 2022-05-11 16:00:00">2022-05-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-19T07:22:39.167Z" title="更新于 2025-08-19 15:22:39">2025-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%AE%BA/">机器人导论</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Webots——PRM算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>PRM路径规划的实验报告</p>
+</blockquote>
+<p>仓库地址：<a href="https://github.com/Lanly109/Webots-Homework/tree/master/PRM_planning" rel="external nofollow noreferrer">github</a></p>
+<h2 id="实验目标"><a class="markdownIt-Anchor" href="#实验目标"></a> 实验目标</h2>
+<ul>
+<li>实现<code>PRM</code>路径规划算法，并让小车依照规划的路线进行行走，从起点到终点。</li>
+</ul>
+<h2 id="实验环境"><a class="markdownIt-Anchor" href="#实验环境"></a> 实验环境</h2>
+<ul>
+<li>
+<p>开发环境：macOS Monterey 12.0.1</p>
+</li>
+<li>
+<p>开发工具：Webots 2021b, OpenCV 4, clang-1300.0.29.3</p>
+</li>
+</ul>
+<h2 id="实验内容"><a class="markdownIt-Anchor" href="#实验内容"></a> 实验内容</h2>
+<p>本实验内容主要是两个：</p>
+<ul>
+<li>
+<p>运用<code>PRM</code>算法规划出一条从起点到终点的最短路线</p>
+</li>
+<li>
+<p>让小车依照此路线从起点走到终点</p>
+</li>
+</ul>
+<p>限于系统原因，<code>OpenCV</code>安装时所编译的动态链接库为<code>Arm</code>架构，而<code>Webots</code>暂未对<code>MacOS</code>的<code>M1</code>类型适配，其动态链接库均为<code>x86_64</code>架构。这将导致<code>Webots</code>在生成项目时，在链接动态链接库阶段出现找不到<code>OpenCV</code>相关成员变量的<code>x86_64</code>的动态库，而在手动用命令行编译时，亦出现找不到<code>Webots</code>相关成员变量的<code>Arm</code>的动态库。因此这里将这两个代码分开，即路径规划和巡线代码为不同文件，其中路径规划代码引用了<code>OpenCV</code>库，在命令行编译下能够正常编译成功运行，巡线代码在<code>Webots</code>下亦能正常编译成功运行。而理论上它们在<code>Linux</code>或<code>Windows</code>应能融洽在同一个代码中。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="error1.png" alt="链接错误arm" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="error2.png" alt="链接错误arm" /></p>
+<p>本次实验提供了一个已经制作好的迷宫的世界。</p>
+<h3 id="prm路径规划"><a class="markdownIt-Anchor" href="#prm路径规划"></a> PRM路径规划</h3>
+<p>首先是进行<code>PRM</code>路径规划的实现。</p>
+<p>本次实验的平面图如下图所示</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="maze.png" alt="Maze" /></p>
+<p>右上角绿色圈圈为起点，左下角红色圈圈为终点。</p>
+<p>通过<code>OpenCV</code>的<code>cv::imread(s.c_str(), cv::IMREAD_COLOR)</code>;函数，以彩色方式读取该图像，输出其长宽发现是一张<code>800\times 600</code>的图像，将其输入的三通道像素数输出到文件<code>qwq</code>进行分析，可以得到起点的绿色圈圈的色素值为<br />
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mn>76</mn><mo separator="true">,</mo><mn>76</mn><mo separator="true">,</mo><mn>76</mn><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\left( 76,76,76 \right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord">7</span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">7</span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">7</span><span class="mord">6</span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span>，终点的红色圈圈的色素值为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mn>36</mn><mo separator="true">,</mo><mn>36</mn><mo separator="true">,</mo><mn>36</mn><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\left( 36,36,36 \right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord">3</span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mord">6</span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span>，对全图遍历找到可以找到起点和终点像素位置并保存。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">maze = cv::<span class="built_in">imread</span>(s.<span class="built_in">c_str</span>(), cv::IMREAD_COLOR);</span><br><span class="line">cols = maze.cols;</span><br><span class="line">rows = maze.rows;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; rows; ++ i)</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; cols; ++ j)&#123;</span><br><span class="line">        <span class="type">int</span> b = maze.<span class="built_in">at</span>&lt;cv::Vec3b&gt;(i, j)[<span class="number">0</span>];</span><br><span class="line">        <span class="type">int</span> g = maze.<span class="built_in">at</span>&lt;cv::Vec3b&gt;(i, j)[<span class="number">0</span>];</span><br><span class="line">        <span class="type">int</span> r = maze.<span class="built_in">at</span>&lt;cv::Vec3b&gt;(i, j)[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">if</span> (b == ST &amp;&amp; sx == <span class="number">-1</span>)&#123;</span><br><span class="line">            sx = i;</span><br><span class="line">            sy = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (b == ED)&#123;</span><br><span class="line">            ex = i;</span><br><span class="line">            ey = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (b != ST &amp;&amp; b != ED &amp;&amp; b != <span class="number">255</span>)</span><br><span class="line">            obs.<span class="built_in">insert</span>(<span class="built_in">two2one</span>(i, j));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>同时将一切像素值不是<code>255</code>的点都视为障碍物。虽然这不太精确，但是考虑到小车是有实际体积而非质点，而规划路径时力求最短路，会很大可能造成规划出来的路径贴墙，因此将非<code>255</code>的视为障碍物能够一定程度地将墙边缘的像素视为障碍物，让规划出来的路径尽可能不贴着墙。</p>
+<p>这里将障碍物的二维坐标转换成一维坐标，并保存在set中。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">two2one</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x * cols + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>OpenCV</code>的运行结果如下图所示。其输出了起点和终点坐标。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="opencv.png" alt="OpenCV" /></p>
+<p><code>PRM</code>算法一共三个步骤：</p>
+<ul>
+<li>随即均匀撒点</li>
+<li>相邻无障碍物点间连边</li>
+<li>运用最短路算法求出一条最短路</li>
+</ul>
+<h4 id="随机均匀撒点"><a class="markdownIt-Anchor" href="#随机均匀撒点"></a> 随机均匀撒点</h4>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">randGenPoint</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; rows; i += disX)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; cols; j += disY)&#123;</span><br><span class="line">            <span class="type">int</span> attempCnt = <span class="number">25</span>;</span><br><span class="line">            <span class="keyword">while</span>(attempCnt--)&#123;</span><br><span class="line">                <span class="type">int</span> x = <span class="built_in">rand</span>() % disX;</span><br><span class="line">                <span class="type">int</span> y = <span class="built_in">rand</span>() % disY;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">valid</span>(x + i, j + y))&#123;</span><br><span class="line">                    point.<span class="built_in">push_back</span>(&#123;x + i, y + j&#125;);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里将图以<code>disX,disY</code>步长切分，在每块中尝试<code>25</code>次点的生成。其中<code>valid</code>函数如下。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">bool</span> <span class="title">valid</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; <span class="number">0</span> &amp;&amp; x &gt;= rows)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (y &lt; <span class="number">0</span> &amp;&amp; y &gt;= cols)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = -REC; i &lt;= REC; ++ i)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = -REC; j &lt;= REC; ++ j)</span><br><span class="line">            <span class="keyword">if</span> (obs.<span class="built_in">find</span>(<span class="built_in">two2one</span>(x + i, y + j)) != obs.<span class="built_in">end</span>())</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该函数判断点是否合法，一是判断是否出界，而是判断以该点为中心的<code>REC</code>范围内是否有障碍物像素点存在。之所以这么处理也是因为上述提到的原因，即尽可能让规划出的路线不贴墙走，因为小车还有具体体积的缘故。</p>
+<p>以下两张图分别展示了<code>REC</code>为<code>0</code>和<code>15</code>时随机生成点的情况。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="example_point.png" alt="REC=15" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="example_n_point.png" alt="REC=15" /></p>
+<h4 id="相邻无障碍物点间连边"><a class="markdownIt-Anchor" href="#相邻无障碍物点间连边"></a> 相邻无障碍物点间连边</h4>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">connectNei</span><span class="params">()</span></span>&#123;</span><br><span class="line">    edge.<span class="built_in">resize</span>(rows * cols);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> [x, y] : point)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> [nx, ny] : point)&#123;</span><br><span class="line">            <span class="keyword">if</span> (nx == x &amp;&amp; ny == y)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">dis</span>(x, y, nx, ny) &lt; neiDis &amp;&amp; <span class="built_in">checkLine</span>(x, y, nx, ny))&#123;</span><br><span class="line">                edge[<span class="built_in">two2one</span>(x, y)].<span class="built_in">push_back</span>(<span class="built_in">two2one</span>(nx, ny));</span><br><span class="line">                edge[<span class="built_in">two2one</span>(nx, ny)].<span class="built_in">push_back</span>(<span class="built_in">two2one</span>(x, y));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>思路比较简单，从生成出的点集里选出两个点，判断其连线是否存在障碍物像素以及距离是否小于预设值<code>neiDis</code>。并把合法连线保存到数组<code>edge</code>中。</p>
+<p>其中判线是否有障碍物的<code>checkline</code>函数如下。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">checkLine</span><span class="params">(<span class="type">int</span> x1, <span class="type">int</span> y1, <span class="type">int</span> x2, <span class="type">int</span> y2)</span></span>&#123;</span><br><span class="line">    <span class="type">double</span> k = <span class="number">0.01</span>;</span><br><span class="line">    <span class="keyword">for</span>(; k &lt;= <span class="number">1</span>; k += <span class="number">0.01</span>)</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">valid</span>(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就运用直线的参数方程那样判断沿途的个个像素是否存在障碍物像素。</p>
+<p>以下两张图分别展示了<code>REC</code>为<code>0</code>和<code>15</code>时连线的情况。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="example_nei.png" alt="REC=15" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="example_n_nei.png" alt="REC=15" /></p>
+<h4 id="运用最短路算法求出一条最短路"><a class="markdownIt-Anchor" href="#运用最短路算法求出一条最短路"></a> 运用最短路算法求出一条最短路</h4>
+<p>得到了图的连边后，就是一个简单的最短路问题了。这里运用<code>dijkstra</code>算法进行求解。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">pre</span><span class="params">(cols * rows)</span></span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">vis</span><span class="params">(cols * rows, <span class="literal">false</span>)</span></span>;</span><br><span class="line"><span class="type">double</span> oo = <span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"><span class="function">vector&lt;<span class="type">double</span>&gt; <span class="title">distance</span><span class="params">(cols * rows, oo)</span></span>;</span><br><span class="line">priority_queue&lt;pair&lt;<span class="type">double</span>, <span class="type">int</span>&gt;&gt; team;</span><br><span class="line">team.<span class="built_in">push</span>(&#123;<span class="number">0</span>, <span class="built_in">two2one</span>(sx, sy)&#125;);</span><br><span class="line">distance[<span class="built_in">two2one</span>(sx, sy)] = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span>(!team.<span class="built_in">empty</span>())&#123;</span><br><span class="line">    <span class="keyword">auto</span> [_, u] = team.<span class="built_in">top</span>();</span><br><span class="line">    team.<span class="built_in">pop</span>();</span><br><span class="line">    <span class="keyword">if</span> (vis[u])</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    vis[u] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> v : edge[u])&#123;</span><br><span class="line">        <span class="type">double</span> w = <span class="built_in">dis</span>(u, v);</span><br><span class="line">        <span class="keyword">if</span> (distance[v] &gt; distance[u] + w)&#123;</span><br><span class="line">            distance[v] = distance[u] + w;</span><br><span class="line">            pre[v] = u;</span><br><span class="line">            team.<span class="built_in">push</span>(&#123;-distance[v], v&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (distance[<span class="built_in">two2one</span>(ex, ey)] == oo)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;WARNING: CANNOT Find a path from start point to target point!\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> u = <span class="built_in">two2one</span>(ex, ey); u != <span class="built_in">two2one</span>(sx, sy); u = pre[u])</span><br><span class="line">    path.<span class="built_in">push_back</span>(u);</span><br><span class="line">path.<span class="built_in">push_back</span>(<span class="built_in">two2one</span>(sx, sy));</span><br><span class="line"><span class="built_in">reverse</span>(path.<span class="built_in">begin</span>(), path.<span class="built_in">end</span>());</span><br></pre></td></tr></table></figure>
+<p><code>dijkstra</code>没什么特别的细节。用<code>pre</code>数组保存最短路中一个点的前继点。最后还判断是否存在一条最短路，存在的话保存一条最短路。因为保存的前继点，压入<code>path</code>数组是从终点到起点，因此最后还需要反转，<code>reverse</code>一下。</p>
+<p>这里 <code>auto [\_, u] = team.top()</code> 是<code>C++17</code>标准的新特性，能够对<br />
+<code>pair&lt;int,int&gt;</code>进行拆包。</p>
+<p>以下两张图展示了<code>REC</code>为<code>0</code>和<code>15</code>时连线的情况。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="example_path.png" alt="REC=15" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="example_n_path.png" alt="REC=15" /></p>
+<p>可以看出<code>REC=0</code>时找出来的最短路有好几处是贴着墙走的，这在实际小车寻路时极易与墙发生碰撞，而<code>REC=15</code>则于道路中间。</p>
+<p>下图为一些分割和邻居阈值数据对应的结果。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="maze_10_20.png" alt="分割20，邻居距离30" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="maze_10_30.png" alt="分割20，邻居距离30" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="maze_20_30.png" alt="分割20，邻居距离30" /></p>
+<h3 id="小车巡线"><a class="markdownIt-Anchor" href="#小车巡线"></a> 小车巡线</h3>
+<p>运用<code>PRM</code>算法规划出一条路径出来后，便考虑如何进行移动。</p>
+<p>一种简单，能够复用上次代码的实现方式是将路径规划到图上，即将规划的路线画在图上，然后通过摄像头巡线的方式行走。但考虑到这样子会有诸多问题，比如行走速度慢，一旦偏离路线就无法回来等。因此这里采用另一种通过<code>GPS</code>规划小车行走的方式。因为已经事先知晓全局路线，包括直线和转弯路径，因此可以动态调整不同速度。</p>
+<h4 id="pure-pursuit"><a class="markdownIt-Anchor" href="#pure-pursuit"></a> Pure Pursuit</h4>
+<p>运动规划的算法很多，比较简单的是一个叫<code>Pure Pursuit</code>算法，也即纯跟踪算法。其思想比较简单，如下图所示。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="purepursuit.png" alt="Pure Pursuit" /></p>
+<p>我们将所有小车的运动都视为在圆上的运动，包括直线运动其实也是在半径无穷大的圆上运动。这样给定当前位置和目标位置，通过简单的数学计算可以算出圆的半径，进而知道该如何转弯。</p>
+<p>但是这里我们使用的是麦克纳姆轮，一种可以全向运动的轮子。虽然麦克纳姆轮可以实现原地自旋实现转弯，但是经过实验发现没有一般小车转弯那么灵活性，在边行走边转弯非常不稳定。因此这里采用一个非常朴素的做法：以上下左右四个方向为基本方向，然后根据起始点和目标点的位置方向来决定速度方向。</p>
+<p>代码的示例如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> f = nX &lt; X ? <span class="number">1</span> : <span class="number">-1</span>;</span><br><span class="line"><span class="type">int</span> r = nY &gt; Y ? <span class="number">1</span> : <span class="number">-1</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)&#123;</span><br><span class="line">    speed1[i] = f * speed_forward[i] * <span class="built_in">fabs</span>(nX - X);</span><br><span class="line">    speed2[i] = r * speed_rightward[i] * <span class="built_in">fabs</span>(nY - Y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>X，Y</code>表示当前位置，<br />
+<code>nX，nY</code>表示目标点位置。这里速度还乘上了距离系数，即比如当目标点就在当前点左边，或左边稍微前方时，就只往左边走，或者放慢往前走的速度。</p>
+<p>那么剩下的就是目标点该如何确定。事实上这里借鉴的就是<code>Pure Pursuit</code>的目标点确定的想法：<code>Lookahead distance</code>。</p>
+<h4 id="lookahead-distance"><a class="markdownIt-Anchor" href="#lookahead-distance"></a> Lookahead distance</h4>
+<p>就犹如人开车一样，往前开车会选择一个参考点，但这个参考点会与当前位置保持一定距离。即前方有若干个参考点，一般会选择离自己比较远的。这个距离就是<code>Lookahead distance</code>。对于当前位置方圆<code>Lookahead distance</code>的点会被忽略，而去寻找在这之外的前方最近点的距离。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt; <span class="title">findLookheadPoint</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> id = <span class="built_in">findNearestPoint</span>(x, y);</span><br><span class="line">    <span class="keyword">if</span> (id &gt; curPoint)</span><br><span class="line">        curPoint = id;</span><br><span class="line">    <span class="type">int</span> cur = <span class="built_in">two2one</span>(x, y);</span><br><span class="line">    <span class="keyword">while</span>(curPoint + <span class="number">1</span> &lt; path.<span class="built_in">size</span>() &amp;&amp; <span class="built_in">dis</span>(cur, path[curPoint]) &lt; l)&#123;</span><br><span class="line">        ++ curPoint;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">one2two</span>(path[curPoint]);</span><br></pre></td></tr></table></figure>
+<p>首先找到距离自身最近的点，然后再往前寻找第一个距离大于<code>Lookahead distance</code>的点。其中 <code>two2one, one2two</code>函数是将坐标二维转一维或一维转二维的。</p>
+<p>当前这里还有一点修改，正如GTA等著名游戏一样，当前速度很快的话，视线就会变得拉长，能看到的东西就很多，而速度变慢时，视线就会变窄，能看到的东西就比较少。这里参照了这个想法，动态调整<code>Lookahead distance</code>：</p>
+<ul>
+<li>
+<p>当速度快时，<code>Lookahead</code>就变大，参考点就距离自己比较远，这样当遇到转弯时就能提前知道，并做相应的动作。</p>
+</li>
+<li>
+<p>当速度慢时，<code>Lookahead</code>就会变小，参考点就距离自己比较近，这样能有效进行转弯。</p>
+</li>
+</ul>
+<p>而前面提到，为了实现直线速度加快，弯道速度减缓，这里就需要思考如何判断当前是走直线还是走弯道。</p>
+<p>为了实现转弯需要计算出当前圆的半径。我们就可以根据这个半径的大小来判断当前是走直线还是弯道。为方便起见，这里取了个阈值，当半径大于<code>2m</code>时我们就认为走的是直线，速度设定为原来的三倍，否则不变。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">double</span> l = maze.<span class="built_in">dis</span>(Y, X, nX, nY);</span><br><span class="line"><span class="type">double</span> R = l * l / <span class="number">2</span> / <span class="built_in">abs</span>(X - nX);</span><br><span class="line"><span class="type">double</span> vv = (R &gt; <span class="number">2</span> ? <span class="number">3</span> : <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)&#123;</span><br><span class="line">    speed1[i] = f * speed_forward[i] * <span class="built_in">fabs</span>(nX - X) * vv;</span><br><span class="line">    speed2[i] = r * speed_rightward[i] * <span class="built_in">fabs</span>(nY - Y) * vv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="小车方向控制"><a class="markdownIt-Anchor" href="#小车方向控制"></a> 小车方向控制</h4>
+<p>上面解决了如何选取目标点以及一些改进和如何向目标点前进的问题，下面是一些额外的问题。</p>
+<p>但在具体实验时发现一个重大问题：注意我们是根据当前位置和目标距离的差值来控制小车的前后速度和左右速度：这里的速度是相对于小车，而不是这个世界的。</p>
+<p>正常情况下，小车不会碰到障碍物，小车能完美地进行路线行走，没有任何问题。</p>
+<p>但由于小车不是质点，有一定的体积，且带有一定的惯性，难免会一定程度偏离预定轨迹，而一旦碰到了障碍物，小车的受力情况就不再只有发动机的力，还有障碍物给予的力，这可能会导致小车的方向偏移，进而导致所谓的小车向前走和向右走的方向与世界参考方向不一致。</p>
+<p>因此小车需要能够自动矫正当前方向的能力。</p>
+<p>其实现起来挺简单，关键要获取小车当前的角度信息，根据小车的角度信息就能够得知是否偏离预定方向，偏离的话该以顺时针还是逆时针旋转能快速归位。</p>
+<p>通过查阅<a href="https://cyberbotics.com/doc/reference/supervisor?tab-language=c++" rel="external nofollow noreferrer">官方文档</a>，得知可以通过<code>Supervisor</code>获取小车的当前方向。于是通过麦克纳姆轮的自旋就可以实现小车的自动校正方向的能力。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">    <span class="type">double</span> orix = <span class="number">-1</span>;</span><br><span class="line">    <span class="type">double</span> oriy = <span class="number">0</span>;</span><br><span class="line">    <span class="type">double</span> oriz = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">double</span> curx = robot-&gt;<span class="built_in">getSelf</span>()-&gt;<span class="built_in">getOrientation</span>()[<span class="number">0</span>];</span><br><span class="line">    <span class="type">const</span> <span class="type">double</span> cury = robot-&gt;<span class="built_in">getSelf</span>()-&gt;<span class="built_in">getOrientation</span>()[<span class="number">1</span>];</span><br><span class="line">    <span class="type">const</span> <span class="type">double</span> curz = robot-&gt;<span class="built_in">getSelf</span>()-&gt;<span class="built_in">getOrientation</span>()[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">abs</span>(curx - orix) &gt; <span class="number">0.1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span> (cury &lt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;LEFT rec\n&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)&#123;</span><br><span class="line">                speed1[i] *= <span class="number">0.01</span>;</span><br><span class="line">                speed2[i] *= <span class="number">0.01</span>;</span><br><span class="line">                speed3[i] = speed_leftCircle[i] * <span class="built_in">abs</span>(curx - orix);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;RIGHT rec\n&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)&#123;</span><br><span class="line">                speed1[i] *= <span class="number">0.01</span>;</span><br><span class="line">                speed2[i] *= <span class="number">0.01</span>;</span><br><span class="line">                speed3[i] = speed_rightCircle[i] * <span class="built_in">abs</span>(curx - orix);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)</span><br><span class="line">            speed3[i] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">```   </span><br><span class="line"></span><br><span class="line">当小车进行方向矫正时，会降低原来行进的速度，优先进行矫正方向行为。</span><br><span class="line"></span><br><span class="line">当然事后通过与同学交流，可以采用另一种行走的方法，即用两个`gps`，分别安置于车头和车身，通过目标点与车头和车身所形成的向量夹角（可以通过叉积求得）来判断当前是否转向且该往哪个方向转。个人觉得这样的方式非常挺好的，能够有效适应方向偏离情形。不过鉴于麦克纳姆轮为全向轮，这样实现也是可以的。</span><br><span class="line"></span><br><span class="line">#### 障碍物检测 </span><br><span class="line"></span><br><span class="line">矫正方向可以有效防止因障碍物碰撞带来的方向偏移问题，但是也存在一些情景会有小车撞在障碍物上。比如目标点在小车位置的左前方，但小车前方已经撞在障碍物上了，这导致小车虽然有前方和左方向的力，但还是会固定在墙上不动了。为了解决这样的情形我们应当减小小车前进的速度，因为前往已有障碍物，这样小车就能先往左边走，走出障碍物再往前走。</span><br><span class="line"></span><br><span class="line">参考官方文档提供的[DistanceSensor](https:<span class="comment">//cyberbotics.com/doc/reference/distancesensor?tab-language=c++)，可以对障碍物距离进行检测，里面有个`Lookup Table`相当于一个距离与值的映射，如下图所示。</span></span><br><span class="line"></span><br><span class="line">![Lookup Table](lookuptable.png)</span><br><span class="line"></span><br><span class="line">这里设置当距离小于`<span class="number">0.1</span>m`时值为`<span class="number">0</span>`，大于`<span class="number">0.2</span>m`时值为`<span class="number">1</span>`，中间值用线性函数表示。给小车分别安置前后左右四个方向的传感器，这样在代码中用`getValue`函数就能获取当前距离对应的值的结果。</span><br><span class="line">```cpp</span><br><span class="line"><span class="type">char</span> distanceNames[<span class="number">4</span>][<span class="number">8</span>] = &#123;<span class="string">&quot;front&quot;</span>, <span class="string">&quot;back&quot;</span>, <span class="string">&quot;left&quot;</span>, <span class="string">&quot;right&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    dismotors[i] = robot-&gt;<span class="built_in">getDistanceSensor</span>(distanceNames[i]);</span><br><span class="line">    dismotors[i]-&gt;<span class="built_in">enable</span>(<span class="number">1</span>);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)&#123;</span><br><span class="line">    dismo[i] = dismotors[i]-&gt;<span class="built_in">getValue</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++ i)&#123;</span><br><span class="line">    speed1[i] = f * speed_forward[i] * <span class="built_in">fabs</span>(nX - X) * vv * <span class="built_in">min</span>(<span class="number">1.0</span>, (f == <span class="number">1</span> ? dismo[<span class="number">0</span>] : dismo[<span class="number">1</span>]));</span><br><span class="line">    speed2[i] = r * speed_rightward[i] * <span class="built_in">fabs</span>(nY - Y) * vv * <span class="built_in">min</span>(<span class="number">1.0</span>, (r == <span class="number">1</span> ? dismo[<span class="number">3</span>] : dismo[<span class="number">2</span>]));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样当前小车的速度值就由四个参数决定：前后还是左右，距离目标点距离，当前行进的半径，与障碍物的距离。</p>
+<h4 id="坐标转换"><a class="markdownIt-Anchor" href="#坐标转换"></a> 坐标转换</h4>
+<p>上述解决了大部分运动规划的问题，还剩下一些小细节问题，其中一个是坐标转换。</p>
+<p>先前我们通过<code>OpenCV</code>读取迷宫图像并规划出路线，其坐标是像素坐标：<code>800x600</code>的一个坐标系。而在模拟世界是以<code>m</code>为单位计算的。我们需要将像素位置转换成模拟世界的位置。</p>
+<p>通过研究模拟世界的坐标，其原点在正中间，不同于图片的左上角。量取真实世界的长宽为<code>6</code>米和<code>4.5</code>米，通过简单的数学换算就可以进行转换了。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt; <span class="title">real2pic</span><span class="params">(<span class="type">double</span> X, <span class="type">double</span> Y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="built_in">int</span>((<span class="number">3</span> - X) / <span class="number">6</span> * <span class="number">800</span>), <span class="built_in">int</span>((Y + <span class="number">2.25</span>) / <span class="number">4.5</span> * <span class="number">600</span>)&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> pair&lt;<span class="type">double</span>, <span class="type">double</span>&gt; <span class="title">pic2real</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="number">3</span> - <span class="number">6</span> * x * <span class="number">1.0</span> / <span class="number">800</span>, <span class="number">-2.25</span> + <span class="number">4.5</span> * y * <span class="number">1.0</span> / <span class="number">600</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="可视化路线"><a class="markdownIt-Anchor" href="#可视化路线"></a> 可视化路线</h4>
+<p>为了能够更好地看到小车正在追踪的点的位置，我们可以将其标记出来。</p>
+<p>参考官网文档提供的<a href="https://cyberbotics.com/doc/reference/display?tab-language=c++" rel="external nofollow noreferrer">display</a>元件，按照文档的说明通过对其设置一个<code>shape</code>，就可以让原本显示在一个小窗口的图像显示在<code>shape</code>上，实现标记点的效果。</p>
+<p>参考官方给出的<a href="https://github.com/cyberbotics/webots/blob/released/projects/samples/devices/controllers/display_supervisor/display_supervisor.c" rel="external nofollow noreferrer">控制器示例</a>和<a href="https://github.com/cyberbotics/webots/blob/released/projects/samples/devices/worlds/display.wbt" rel="external nofollow noreferrer">世界文件示例</a>。这里需要另一个<code>robot</code>充当<code>display</code>的载体，里面的一个<code>children</code>为<code>display</code>充当图像的绘制，再给<code>display</code>的<code>children</code>来一个<code>shape</code>来显示绘制的图像。</p>
+<p>具体实现这个效果遇到的最大的问题就是坐标的定位。注意到<code>display</code>也有<code>width</code>和<code>height</code>属性，因此要绘制的坐标要依靠这个属性来确定，原点同样在左上角，这里就需要一个坐标转换公式。之前一直以为是模拟世界的坐标就一直弄不出效果。</p>
+<p>还有一个小车圈圈的动态移动的实现，这里运用的是图像的保存和重绘制。即在绘制小车圈圈前保存当前图像，然后再绘制下一次小车圈圈时先还原图像，再绘制下一个圈圈，否则前后圈圈会相互重叠。</p>
+<p>还有一个大问题就是通信。由于<code>display</code>在另一个<code>robot</code>上，这个<code>robot</code>与前面实现的<code>robot</code>不是同一个<code>robot</code>，需要用不同的<code>controller</code>程序。那么寻路小车当前追随的目标点信息只保存在那个程序里，在<code>display</code>的<code>robot</code>程序不得而知。由于网上关于<code>webots</code>的<code>display</code>教程几乎没有，官方提供的示例仅仅是小车的位置，而这个可以通过先前提到的<code>supervisor</code>获得。因此，由于不太会进程间的通信，这里实现的方式是在<code>display</code>的<code>robot</code>也模拟同样的行为：根据小车的位置获取最近的目标点。虽然会消耗一定的不必要计算资源但也是个可行的解决方案。</p>
+<h2 id="实验结果"><a class="markdownIt-Anchor" href="#实验结果"></a> 实验结果</h2>
+<p>演示视频：<a href="https://www.bilibili.com/video/BV1pL4y1s7MV" rel="external nofollow noreferrer">bilibili</a></p>
+<h2 id="实验总结"><a class="markdownIt-Anchor" href="#实验总结"></a> 实验总结</h2>
+<p>通过本次实验，我了解到了<code>PRM</code>算法实现的具体流程，明白了<code>PRM</code>算法的重要意义：连续变离散化。由于世界是连续的，<code>PRM</code>算法通过对世界采样将其离散化，然后在离散化的点之间建立连边，就变成了算法课上学到的图论中的图，然后应用最短路算法就可以解决了。除此之外还了解到了如何对规划的路径进行行走，在网上搜索资料的时候，除了<code>Pure Pursuit</code>算法之外，貌似还有另一种叫<code>MPC</code>算法，一种精度更高但需要更大计算量的算法。除此之外还有对环境实时感知，就犹如老师上课演示的一个视频，未知区域默认无障碍物下的路径规划行走情景，但探查到有障碍物后再进一步修正路线，所采取的<code>SLAM</code>算法，起初在思考这类情形的时候，觉得最棘手的就是如何通过小车的视觉传感器（？或者可能用其他的）去构建平面图，这里精度误差是关键，但未能想到好的方案，即如何从画面中的障碍物转换到平面地图，包括位置和障碍物的长度。虽然感觉用相关的视觉数学知识可以转换但稍感到复杂。</p>
+<p>尽管如此，结合麦克纳姆轮的特性，这里就只借鉴了<code>Pure Pursuit</code>的<code>Lookahead distance</code>的思想，以及结合自己曾经玩过的游戏的一些视觉感受，增加了动态调整<code>Lookahead distance</code>以及可视化路径跟踪过程。期间遇到的最大的问题就是进程间的通信，限于<code>Webots</code>的实现，暂时没能想到好的向<code>display</code>的<code>robot</code>传输行走的<code>robot</code>的相关信息，只能让<code>display</code>也模拟其行为。为了实现相关功能，参考最多的就是<code>Webots</code>官方文档，尤其是<code>display</code>相关的知识，只有官方文档的英文说明，其余的资料几乎没有。但最后还是根据说明和官方给出的C语言的示例代码，编写出了相应的<code>C++</code>的控制器，还是颇有成就感的。只是期间些许问题，尤其是坐标定位，只能琢磨官方给的文档和代码，网上也没其他资料了。</p>
+<p>总之，本次实验收获颇丰，进一步熟悉了<code>Webots</code>的软件，以及知晓了机器人的路径规划和行路的流程。</p>
+</article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>Webots——PRM算法</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a href="http://blog.lanly.vip/posts/d2cfe463.html">http://blog.lanly.vip/posts/d2cfe463.html</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>作者</h><div class="post-copyright-cc-info"><h>Lanly</h></div></div><div class="post-copyright-c"><h>发布于</h><div class="post-copyright-cc-info"><h>2022-05-11</h></div></div><div class="post-copyright-u"><h>更新于</h><div class="post-copyright-cc-info"><h>2025-08-19</h></div></div><div class="post-copyright-c"><h>许可协议</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener external nofollow noreferrer" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener external nofollow noreferrer" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Webots/">Webots</a><a class="post-meta__tags" href="/tags/PRM/">PRM</a><a class="post-meta__tags" href="/tags/Probabilistic-Roadmaps/">Probabilistic Roadmaps</a><a class="post-meta__tags" href="/tags/Pure-Pursuit/">Pure Pursuit</a><a class="post-meta__tags" href="/tags/OpenCV/">OpenCV</a></div><div class="post_share"><div class="social-share" data-image="/img/chino/vec/chino55.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/e7f15f8.html" title="Webots——RRT算法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino54.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-11</div><div class="title">Webots——RRT算法</div></div></a></div><div><a href="/posts/10a3c0f3.html" title="Webots——Fianl大作业"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino58.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-06</div><div class="title">Webots——Fianl大作业</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%9B%AE%E6%A0%87"><span class="toc-number">1.</span> <span class="toc-text"> 实验目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text"> 实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9"><span class="toc-number">3.</span> <span class="toc-text"> 实验内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#prm%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92"><span class="toc-number">3.1.</span> <span class="toc-text"> PRM路径规划</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E5%9D%87%E5%8C%80%E6%92%92%E7%82%B9"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 随机均匀撒点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E9%82%BB%E6%97%A0%E9%9A%9C%E7%A2%8D%E7%89%A9%E7%82%B9%E9%97%B4%E8%BF%9E%E8%BE%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text"> 相邻无障碍物点间连边</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E7%94%A8%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95%E6%B1%82%E5%87%BA%E4%B8%80%E6%9D%A1%E6%9C%80%E7%9F%AD%E8%B7%AF"><span class="toc-number">3.1.3.</span> <span class="toc-text"> 运用最短路算法求出一条最短路</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E8%BD%A6%E5%B7%A1%E7%BA%BF"><span class="toc-number">3.2.</span> <span class="toc-text"> 小车巡线</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pure-pursuit"><span class="toc-number">3.2.1.</span> <span class="toc-text"> Pure Pursuit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lookahead-distance"><span class="toc-number">3.2.2.</span> <span class="toc-text"> Lookahead distance</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E8%BD%A6%E6%96%B9%E5%90%91%E6%8E%A7%E5%88%B6"><span class="toc-number">3.2.3.</span> <span class="toc-text"> 小车方向控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.2.4.</span> <span class="toc-text"> 坐标转换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E8%B7%AF%E7%BA%BF"><span class="toc-number">3.2.5.</span> <span class="toc-text"> 可视化路线</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text"> 实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 实验总结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Lanly</div><div class="framework-info"><span>框架 </span><a href="https://hexo.io" rel="external nofollow noreferrer">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" rel="external nofollow noreferrer">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" rel="external nofollow noreferrer" target="_blank">粤ICP备2021014426</a></div><script type="text/javascript" id="maid-script" src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js?v=undefined"></script><script>if (window.mermaid) {
+  var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptioins'));
+  mermaid.initialize(options);
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    btf.addModeChange('mermaid', () => {
+      window.runMermaid()
+    })
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><script defer src="/js/light.js"></script><script defer src="/js/universe.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer src="/js/homeessay.js"></script><canvas id="universe"></canvas><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('bbTimeList');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino58.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-06-06</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">Webots——Fianl大作业</a><div class="blog-slider__text">小组合作作业</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-05-01</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">滚榜程序Resolver源码阅读</a><div class="blog-slider__text">太难了.jpg</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterend",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>

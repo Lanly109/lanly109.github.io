@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Lanlyの小窝</title>
+  
+  
+  <link href="http://blog.lanly.vip/atom.xml" rel="self"/>
+  
+  <link href="http://blog.lanly.vip/"/>
+  <updated>2025-08-19T07:22:39.110Z</updated>
+  <id>http://blog.lanly.vip/</id>
+  
+  <author>
+    <name>Lanly</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MILP-StuDio</title>
+    <link href="http://blog.lanly.vip/posts/b5f500a.html"/>
+    <id>http://blog.lanly.vip/posts/b5f500a.html</id>
+    <published>2025-03-07T06:19:40.000Z</published>
+    <updated>2025-08-19T07:22:39.110Z</updated>
+    
+    
+    <summary type="html">运用MILP问题块信息的实例生成器</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="SCIP" scheme="http://blog.lanly.vip/tags/SCIP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用Github Actions实现UnityCI构建</title>
+    <link href="http://blog.lanly.vip/posts/b5c76f33.html"/>
+    <id>http://blog.lanly.vip/posts/b5c76f33.html</id>
+    <published>2025-01-13T12:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.126Z</updated>
+    
+    
+    <summary type="html">持续集成</summary>
+    
+    
+    
+    <category term="环境部署" scheme="http://blog.lanly.vip/categories/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/"/>
+    
+    
+    <category term="Github" scheme="http://blog.lanly.vip/tags/Github/"/>
+    
+    <category term="Unity" scheme="http://blog.lanly.vip/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vim使用记录</title>
+    <link href="http://blog.lanly.vip/posts/6719ba1e.html"/>
+    <id>http://blog.lanly.vip/posts/6719ba1e.html</id>
+    <published>2024-11-08T05:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.167Z</updated>
+    
+    
+    <summary type="html">Vim的实用技巧</summary>
+    
+    
+    
+    <category term="经验" scheme="http://blog.lanly.vip/categories/%E7%BB%8F%E9%AA%8C/"/>
+    
+    
+    <category term="Vim" scheme="http://blog.lanly.vip/tags/Vim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>科研工具</title>
+    <link href="http://blog.lanly.vip/posts/7c69d6fd.html"/>
+    <id>http://blog.lanly.vip/posts/7c69d6fd.html</id>
+    <published>2024-10-03T03:00:33.000Z</published>
+    <updated>2025-08-19T07:22:39.120Z</updated>
+    
+    
+    <summary type="html">工具记录</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="工具" scheme="http://blog.lanly.vip/tags/%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Apollo-MILP</title>
+    <link href="http://blog.lanly.vip/posts/23e11e23.html"/>
+    <id>http://blog.lanly.vip/posts/23e11e23.html</id>
+    <published>2024-08-05T06:33:00.000Z</published>
+    <updated>2025-08-19T07:22:39.103Z</updated>
+    
+    
+    <summary type="html">综述</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="MILP" scheme="http://blog.lanly.vip/tags/MILP/"/>
+    
+    <category term="Branch and Bound" scheme="http://blog.lanly.vip/tags/Branch-and-Bound/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>快速且可解释的 MILP 求解</title>
+    <link href="http://blog.lanly.vip/posts/5c282d63.html"/>
+    <id>http://blog.lanly.vip/posts/5c282d63.html</id>
+    <published>2024-08-05T06:33:00.000Z</published>
+    <updated>2025-08-19T07:22:39.106Z</updated>
+    
+    
+    <summary type="html">综述</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="MILP" scheme="http://blog.lanly.vip/tags/MILP/"/>
+    
+    <category term="Branch and Bound" scheme="http://blog.lanly.vip/tags/Branch-and-Bound/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>应用机器学习的分支定界算法求解混合整数线性规划问题</title>
+    <link href="http://blog.lanly.vip/posts/f7c75aea.html"/>
+    <id>http://blog.lanly.vip/posts/f7c75aea.html</id>
+    <published>2024-06-05T06:33:00.000Z</published>
+    <updated>2025-08-19T07:22:39.116Z</updated>
+    
+    
+    <summary type="html">综述</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="MILP" scheme="http://blog.lanly.vip/tags/MILP/"/>
+    
+    <category term="Branch and Bound" scheme="http://blog.lanly.vip/tags/Branch-and-Bound/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mip</title>
+    <link href="http://blog.lanly.vip/posts/5b7420b3.html"/>
+    <id>http://blog.lanly.vip/posts/5b7420b3.html</id>
+    <published>2024-06-05T06:33:00.000Z</published>
+    <updated>2025-08-19T07:22:39.120Z</updated>
+    
+    
+    <summary type="html">综述</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="MILP" scheme="http://blog.lanly.vip/tags/MILP/"/>
+    
+    <category term="Branch and Bound" scheme="http://blog.lanly.vip/tags/Branch-and-Bound/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SCIP教程</title>
+    <link href="http://blog.lanly.vip/posts/ea1b0e33.html"/>
+    <id>http://blog.lanly.vip/posts/ea1b0e33.html</id>
+    <published>2024-06-03T10:23:12.000Z</published>
+    <updated>2025-08-19T07:22:39.116Z</updated>
+    
+    
+    <summary type="html">SCIP和对应库的安装使用</summary>
+    
+    
+    
+    <category term="科研" scheme="http://blog.lanly.vip/categories/%E7%A7%91%E7%A0%94/"/>
+    
+    
+    <category term="SCIP" scheme="http://blog.lanly.vip/tags/SCIP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于UDP的文件传输程序</title>
+    <link href="http://blog.lanly.vip/posts/2bf18a0f.html"/>
+    <id>http://blog.lanly.vip/posts/2bf18a0f.html</id>
+    <published>2022-07-06T04:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.127Z</updated>
+    
+    
+    <summary type="html">在应用层实现TCP协议的小程序</summary>
+    
+    
+    
+    <category term="计算机网络" scheme="http://blog.lanly.vip/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+    <category term="Python" scheme="http://blog.lanly.vip/tags/Python/"/>
+    
+    <category term="UDP" scheme="http://blog.lanly.vip/tags/UDP/"/>
+    
+    <category term="TCP" scheme="http://blog.lanly.vip/tags/TCP/"/>
+    
+    <category term="RTT" scheme="http://blog.lanly.vip/tags/RTT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Deep Reinforcement Learning for ENAS</title>
+    <link href="http://blog.lanly.vip/posts/2d0ac27e.html"/>
+    <id>http://blog.lanly.vip/posts/2d0ac27e.html</id>
+    <published>2022-06-14T06:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.120Z</updated>
+    
+    
+    <summary type="html">Paper Reproduction and Improvement</summary>
+    
+    
+    
+    <category term="强化学习" scheme="http://blog.lanly.vip/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="ENAS" scheme="http://blog.lanly.vip/tags/ENAS/"/>
+    
+    <category term="Python" scheme="http://blog.lanly.vip/tags/Python/"/>
+    
+    <category term="Cuda" scheme="http://blog.lanly.vip/tags/Cuda/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Webots——Fianl大作业</title>
+    <link href="http://blog.lanly.vip/posts/10a3c0f3.html"/>
+    <id>http://blog.lanly.vip/posts/10a3c0f3.html</id>
+    <published>2022-06-06T07:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.204Z</updated>
+    
+    
+    <summary type="html">小组合作作业</summary>
+    
+    
+    
+    <category term="机器人导论" scheme="http://blog.lanly.vip/categories/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%AE%BA/"/>
+    
+    
+    <category term="Webots" scheme="http://blog.lanly.vip/tags/Webots/"/>
+    
+    <category term="SLAM" scheme="http://blog.lanly.vip/tags/SLAM/"/>
+    
+    <category term="D*" scheme="http://blog.lanly.vip/tags/D/"/>
+    
+    <category term="PID" scheme="http://blog.lanly.vip/tags/PID/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Webots——RRT算法</title>
+    <link href="http://blog.lanly.vip/posts/e7f15f8.html"/>
+    <id>http://blog.lanly.vip/posts/e7f15f8.html</id>
+    <published>2022-05-11T09:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.182Z</updated>
+    
+    
+    <summary type="html">将世界化连续为离散的有一种方法</summary>
+    
+    
+    
+    <category term="机器人导论" scheme="http://blog.lanly.vip/categories/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%AE%BA/"/>
+    
+    
+    <category term="Webots" scheme="http://blog.lanly.vip/tags/Webots/"/>
+    
+    <category term="Pure Pursuit" scheme="http://blog.lanly.vip/tags/Pure-Pursuit/"/>
+    
+    <category term="OpenCV" scheme="http://blog.lanly.vip/tags/OpenCV/"/>
+    
+    <category term="RRT*" scheme="http://blog.lanly.vip/tags/RRT/"/>
+    
+    <category term="Rapidly-exploring Random Trees" scheme="http://blog.lanly.vip/tags/Rapidly-exploring-Random-Trees/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Webots——PRM算法</title>
+    <link href="http://blog.lanly.vip/posts/d2cfe463.html"/>
+    <id>http://blog.lanly.vip/posts/d2cfe463.html</id>
+    <published>2022-05-11T08:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.167Z</updated>
+    
+    
+    <summary type="html">将世界化连续为离散</summary>
+    
+    
+    
+    <category term="机器人导论" scheme="http://blog.lanly.vip/categories/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%AE%BA/"/>
+    
+    
+    <category term="Webots" scheme="http://blog.lanly.vip/tags/Webots/"/>
+    
+    <category term="PRM" scheme="http://blog.lanly.vip/tags/PRM/"/>
+    
+    <category term="Probabilistic Roadmaps" scheme="http://blog.lanly.vip/tags/Probabilistic-Roadmaps/"/>
+    
+    <category term="Pure Pursuit" scheme="http://blog.lanly.vip/tags/Pure-Pursuit/"/>
+    
+    <category term="OpenCV" scheme="http://blog.lanly.vip/tags/OpenCV/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>滚榜程序Resolver源码阅读</title>
+    <link href="http://blog.lanly.vip/posts/7b2538bb.html"/>
+    <id>http://blog.lanly.vip/posts/7b2538bb.html</id>
+    <published>2022-05-01T12:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.126Z</updated>
+    
+    
+    <summary type="html">太难了.jpg</summary>
+    
+    
+    
+    <category term="源码阅读" scheme="http://blog.lanly.vip/categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"/>
+    
+    
+    <category term="ICPC_tools" scheme="http://blog.lanly.vip/tags/ICPC-tools/"/>
+    
+    <category term="resolver" scheme="http://blog.lanly.vip/tags/resolver/"/>
+    
+    <category term="滚榜" scheme="http://blog.lanly.vip/tags/%E6%BB%9A%E6%A6%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>委托构造函数</title>
+    <link href="http://blog.lanly.vip/posts/dc521e77.html"/>
+    <id>http://blog.lanly.vip/posts/dc521e77.html</id>
+    <published>2022-04-19T08:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.120Z</updated>
+    
+    
+    <summary type="html">简化继承类的构造函数代码</summary>
+    
+    
+    
+    <category term="C++" scheme="http://blog.lanly.vip/categories/C/"/>
+    
+    
+    <category term="C++11" scheme="http://blog.lanly.vip/tags/C-11/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>第一次网站的搭建和优化经历</title>
+    <link href="http://blog.lanly.vip/posts/cd8d5fec.html"/>
+    <id>http://blog.lanly.vip/posts/cd8d5fec.html</id>
+    <published>2022-04-18T13:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.208Z</updated>
+    
+    
+    <summary type="html">不要过早优化.jpg</summary>
+    
+    
+    
+    <category term="网站搭建" scheme="http://blog.lanly.vip/categories/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/"/>
+    
+    
+    <category term="碎碎念" scheme="http://blog.lanly.vip/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
+    
+    <category term="react" scheme="http://blog.lanly.vip/tags/react/"/>
+    
+    <category term="golang" scheme="http://blog.lanly.vip/tags/golang/"/>
+    
+    <category term="webpack" scheme="http://blog.lanly.vip/tags/webpack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>新环境配置</title>
+    <link href="http://blog.lanly.vip/posts/b8a8c0a4.html"/>
+    <id>http://blog.lanly.vip/posts/b8a8c0a4.html</id>
+    <published>2022-04-11T12:00:00.000Z</published>
+    <updated>2025-08-19T07:22:39.126Z</updated>
+    
+    
+    <summary type="html">减少重复操作</summary>
+    
+    
+    
+    <category term="环境部署" scheme="http://blog.lanly.vip/categories/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/"/>
+    
+    
+    <category term="vim" scheme="http://blog.lanly.vip/tags/vim/"/>
+    
+    <category term="zsh" scheme="http://blog.lanly.vip/tags/zsh/"/>
+    
+    <category term="ranger" scheme="http://blog.lanly.vip/tags/ranger/"/>
+    
+    <category term="lazygit" scheme="http://blog.lanly.vip/tags/lazygit/"/>
+    
+  </entry>
+  
+</feed>

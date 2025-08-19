@@ -1,0 +1,113 @@
+:root {
+  --trans-light: rgba(255, 255, 255, 0.88);
+  --trans-dark: rgba(25, 25, 25, 0.88);
+  --border-style: 1px solid rgb(169, 169, 169);
+  --backdrop-filter: blur(5px) saturate(150%);
+}
+
+:root {
+  --lanly-white: #fff;
+  --lanly-white-op: rgba(255, 255, 255, 0.2);
+  --lanly-black: #000;
+  --lanly-black-op: rgba(0, 0, 0, 0.2);
+  --lanly-none: #00000000;
+  --lanly-gray: #999999;
+  --lanly-gray-op: #9999992b;
+  --lanly-vip: #e5a80d;
+  --lanly-main: var(--lanly-theme);
+  --lanly-main-op: var(--lanly-theme-op);
+  --lanly-main-op-deep: var(--lanly-theme-op-deep);
+  --lanly-main-none: var(--lanly-theme-none);
+  --lanly-shadow-theme: 0 8px 12px -3px var(--lanly-theme-op);
+  --lanly-shadow-blackdeep: 0 2px 16px -3px rgba(0, 0, 0, .15);
+  --lanly-shadow-main: 0 8px 12px -3px var(--lanly-main-op);
+  --lanly-shadow-blue: 0 8px 12px -3px rgba(40, 109, 234, .20);
+  --lanly-shadow-white: 0 8px 12px -3px rgba(255, 255, 255, .20);
+  --lanly-shadow-black: 0 0 12px 4px rgba(0, 0, 0, .05);
+  --lanly-shadow-yellow: 0px 38px 77px -26px rgba(255, 201, 62, .12);
+  --lanly-shadow-red: 0 8px 12px -3px #ee7d7936;
+  --lanly-shadow-green: 0 8px 12px -3px #87ee7936;
+  --lanly-logo-color: linear-gradient(215deg, #4584ff 0%, #cf0db9 100%);
+  --lanly-snackbar-time: 5s;
+  --style-border: 1px solid var(--lanly-card-border);
+  --style-border-always: 1px solid var(--lanly-card-border);
+  --style-border-hover: 1px solid var(--lanly-main);
+  --style-border-hover-always: 1px solid var(--lanly-main);
+  --style-border-dashed: 1px dashed var(--lanly-theme-op);
+}
+
+[data-theme=light] {
+  --lanly-theme: #425AEF;
+  --lanly-theme-op: #4259ef23;
+  --lanly-theme-op-deep: #4259efdd;
+  --lanly-theme-none: #4259ef01;
+  --lanly-blue: #425AEF;
+  --lanly-red: #f04a63;
+  --lanly-pink: #FF7C7C;
+  --lanly-green: #57bd6a;
+  --lanly-yellow: #c28b00;
+  --lanly-yellow-op: #d99c001a;
+  --lanly-orange: #e38100;
+  --lanly-fontcolor: #363636;
+  --lanly-background: #f7f9fe;
+  --lanly-reverse: #000;
+  --lanly-maskbg: rgba(255, 255, 255, 0.6);
+  --lanly-maskbgdeep: rgba(255, 255, 255, 0.85);
+  --lanly-hovertext: var(--lanly-main);
+  --lanly-ahoverbg: #F7F7FA;
+  --lanly-lighttext: var(--lanly-main);
+  --lanly-secondtext: rgba(60, 60, 67, 0.6);
+  --lanly-scrollbar: rgba(60, 60, 67, 0.4);
+  --lanly-card-btn-bg: #edf0f7;
+  --lanly-card-btn-hover: var(--lanly-blue);
+  --lanly-post-blockquote-bg: #fafcff;
+  --lanly-post-tabs-bg: #f2f5f8;
+  --lanly-secondbg: #f1f3f8;
+  --lanly-shadow-nav: 0 5px 12px -5px rgba(102, 68, 68, 0.05);
+  --lanly-card-bg: rgba(255,255,255,0.9);
+  --lanly-card-bg-op: var(--lanly-black-op);
+  --lanly-card-bg-none: rgba(255, 255, 255, 0);
+  --lanly-shadow-lightblack: 0 5px 12px -5px rgba(102, 68, 68, 0.00);
+  --lanly-shadow-light2black: 0 5px 12px -5px rgba(102, 68, 68, 0.00);
+  --lanly-card-border: #e3e8f7;
+  --lanly-shadow-border: 0 8px 16px -4px #2c2d300c;
+  --style-border-forever: 2px solid var(--lanly-main);
+}
+
+[data-theme=dark] {
+  --lanly-theme: #0084FF;
+  --lanly-theme-op: #0084FF23;
+  --lanly-theme-op-deep: #0084ffdd;
+  --lanly-theme-none: #0084FF00;
+  --lanly-blue: #0084FF;
+  --lanly-red: #FF3842;
+  --lanly-pink: #d44040;
+  --lanly-green: #0e8524;
+  --lanly-yellow: #ffc93e;
+  --lanly-yellow-op: #ffc93e30;
+  --lanly-orange: #ff953e;
+  --lanly-fontcolor: #F7F7FA;
+  --lanly-background: #18171d;
+  --lanly-reverse: #fff;
+  --lanly-maskbg: rgba(0, 0, 0, 0.6);
+  --lanly-maskbgdeep: rgba(0, 0, 0, 0.85);
+  --lanly-hovertext: #0A84FF;
+  --lanly-ahoverbg: #fff;
+  --lanly-lighttext: #f2b94b;
+  --lanly-secondtext: #a1a2b8;
+  --lanly-scrollbar: rgba(200, 200, 223, 0.4);
+  --lanly-card-btn-bg: #30343f;
+  --lanly-card-btn-hover: var(--lanly-blue);
+  --lanly-post-blockquote-bg: #000;
+  --lanly-post-tabs-bg: #121212;
+  --lanly-secondbg: #30343f;
+  --lanly-shadow-nav: 0 5px 20px 0px rgba(28, 28, 28, 0.4);
+  --lanly-card-bg: rgba(29,30,34,0.9);
+  --lanly-card-bg-op: var(--lanly-white-op);
+  --lanly-card-bg-none: #1d1b2600;
+  --lanly-shadow-lightblack: 0 5px 12px -5px rgba(102, 68, 68, 0.0);
+  --lanly-shadow-light2black: 0 5px 12px -5px rgba(102, 68, 68, 0.0);
+  --lanly-card-border: #3d3d3f;
+  --lanly-shadow-border: 0 8px 16px -4px #00000050;
+  --style-border-forever: 2px solid var(--lanly-lighttext);
+}

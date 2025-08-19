@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>第一次网站的搭建和优化经历 | Lanlyの小窝</title><meta name="author" content="Lanly"><meta name="copyright" content="Lanly"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="不要过早优化.jpg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一次网站的搭建和优化经历">
+<meta property="og:url" content="http://blog.lanly.vip/posts/cd8d5fec.html">
+<meta property="og:site_name" content="Lanlyの小窝">
+<meta property="og:description" content="不要过早优化.jpg">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.lanly.vip/img/chino/vec/chino1.jpg">
+<meta property="article:published_time" content="2022-04-18T13:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-19T07:22:39.208Z">
+<meta property="article:author" content="Lanly">
+<meta property="article:tag" content="碎碎念">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="webpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.lanly.vip/img/chino/vec/chino1.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.lanly.vip/posts/cd8d5fec.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '第一次网站的搭建和优化经历',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-19 15:22:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/var.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/menuicon.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/essay.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/home_essay_bar.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Lanlyの小窝" type="application/atom+xml">
+</head><body><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><div class="loading-img"></div><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+
+preloader.initLoading()
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><script async="async" data-pjax="data-pjax" src="/js/WaterRipple.js"></script><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/chino/vec/chino1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Lanlyの小窝"><span class="site-name">Lanlyの小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">第一次网站的搭建和优化经历</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-18T13:00:00.000Z" title="发表于 2022-04-18 21:00:00">2022-04-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-19T07:22:39.208Z" title="更新于 2025-08-19 15:22:39">2025-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/">网站搭建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="第一次网站的搭建和优化经历"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>第一次网站的搭建和优化经历。</p>
+</blockquote>
+<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>上个月接到个任务，需要开发一个代码提交网站，以在这个月的比赛中使用，届时会有将近千名考生提交代码。嗯当时的需求就是如此简洁明了。</p>
+<h2 id="设计"><a class="markdownIt-Anchor" href="#设计"></a> 设计</h2>
+<p>因为之前重构过一次网站，采用的是<code>React+golang</code>，于是这次也采用这样的前后端分离的技术。</p>
+<p>于是花了一个星期，设计了前端样式，前后端数据传输的格式，数据库表结构，并且去<code>github</code>搜索了可行的技术框架，参考别人的一些代码。</p>
+<p>虽然当时预想的是在比赛结束前30分钟或者比赛结束后10分钟开放提交。但考虑到考生应该对系统有熟悉的时间，于是设计时将比赛的<code>active</code>时间和<code>open</code>时间分开，也即考生可以登录的时间和可以提交的时间分开。这样利于考生提前登录熟悉环境，也有利于分散流量。</p>
+<h2 id="编码"><a class="markdownIt-Anchor" href="#编码"></a> 编码</h2>
+<p>在感觉一切确定好后，在某个周末开工，由于先前重构过网站，这两个网站有一定的相似性，和一些类似的<code>demo</code>，通过简单<code>CV</code>和更改，花了一天写完了前端，一天写完了后端。</p>
+<ul>
+<li>在前端方面，</li>
+</ul>
+<p>不得不说<code>react router</code>的升级真的激进，<code>v5</code>跟<code>v6</code>的差别好大，好多函数组建都被改名或弃用了，导致网上参考的别人的代码（采用<code>v5</code>的）都失效了，只能去看<a href="https://reactrouterdotcom.fly.dev/docs/en/v6" rel="external nofollow noreferrer">官方文档</a>。其余的，<code>react</code>引入的<code>hook</code>是真的香，不用再写一些类，定义一些有的无的东西，简化了代码，感觉非常舒心。不过目前也就只会用<code>useState</code>和<code>useEffect</code>，对于表单<code>form</code>之类的，在数据处理方面写的有些繁琐，表单的每一项都要一个单独的<code>handle</code>函数，提交也是单独一个提交函数，感觉完全割裂了表单数据的整体性，不像之前看到的<code>php</code>写法。听说可以用<code>useForm</code>来解决，下次去看看。</p>
+<p>前端<code>UI</code>库还是沿用了老一辈学长所使用的<code>semantic UI</code>。但这个库感觉过于古老了，以至于在使用上，尤其是错误消息提醒方面的效果和动画渐变效果比较难以实现，不像<code>antd</code>的错误效果有专门的函数，能够实现右上角、中间弹窗消失的效果。不过<code>semantic</code>唯一让我中意的就是<code>table</code>的样式，尤其是单元格的颜色对错时的绿色和红色。</p>
+<ul>
+<li>在后端方面，</li>
+</ul>
+<p>由于要维持用户的登录状态，众所周知这需要<code>cookie</code>，但这个<code>cookie</code>存哪里呢我一直没找到什么解释。故我就采用最原始的存在数据库里并存着失效时间，但这样每次访问都要验证<code>cookie</code>的有效性而查询数据库，感觉效率会大大降低。网上搜到的一些方法如<code>gin</code>也就采用<code>session</code>的方式，但具体原理未能理解。</p>
+<p>其次，在最初的设计中没有考虑后端代码的结构，虽然这次没有像第一次重构时所有代码写到一个文件里导致长达1000行，而是分了不同的文件，但在写的时候还是碰到了冗余代码的问题：在验证用户的权限、提交题目的权限等地方都有多次获取用户所在组等信息。原本设想的是不同地方获取的信息不同，如果统一写的话在不同地方会有冗余信息出来，但像这样，在提交题目时需要获取用户所在比赛的信息，在验证用户是否有权限访问某网站需要用户的身份的信息，特化在特定行为需要特定的信息，就为了那微不足道的性能优化降低了代码的可维护性，大大增加后续代码维护的成本。因此下次，设计时包括后端代码的结构组织，重复代码的提取，不要过早优化性能。</p>
+<p>上周无意间发现了个不错的<code>golang</code>的脚手架<a href="https://github.com/gourouting/singo" rel="external nofollow noreferrer">singo</a>。采用的<code>MVC</code>组织方式，将<code>api</code>的监听层和事务逻辑层分隔开，层次清晰，同时也学习到了<code>GORM</code>库，将与数据库交互的<code>sql</code>语句进行封装。也学习到了更优美的中间件的使用方式。忽然意识到去年10月用<code>python</code>的<code>django</code>也是采用这样的方式组织代码，有视图层，管理层，序列化层，看样子是一个很好的组织方式。</p>
+<h2 id="优化"><a class="markdownIt-Anchor" href="#优化"></a> 优化</h2>
+<p>写完后，忽然多了个需求想增加个通知界面，能够发布通知和试题压缩包链接之类的，于是很快啊，考虑到通知的增加需求，加了个简单页面，数据库加了个表。</p>
+<p>然后啊，忽然说想让选手可以在整场比赛都可以提交，并且想提前一天开放登录，但不能提交，让他们熟悉下系统。还好之前考虑到这点，区分了这两种行为的时间，就不需要做改动了hhh。</p>
+<p>就绪后，整了个服务器，然后把网站部署了下，测试测试，感觉一切功能良好，然后按了下<code>F12</code>，网络一览忽然发现传输的<code>main.js</code>文件多大<code>1.8MB</code>。</p>
+<p>一个人传输<code>1.8MB</code>，那1000个人就是<code>2G</code>了。这对于区区只有<code>10M</code>带宽的服务器怎么抵得住。</p>
+<p>为了减少这个文件的大小，了解了<code>webpack</code>的作用，通过询问别人得知可以通过<code>source-map-explorer</code>插件查看这个<code>js</code>的内部结构。于是看到了为什么文件会这么大。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="bigbig.png" alt="bigbig" /></p>
+<p>原来是代码高亮插件<code>highlight</code>如此之大，<code>webpack</code>把该插件中适用所有语言的高亮脚本都整进去了，而事实上我们允许提交的语言只有<code>C++</code>，因此只要保留这个语言的高亮脚本就好了。</p>
+<p>明白了第一步的优化方向，剩下的就是如何做到这个。通过网上的搜索，由于我是用<code>create-react-app</code>构建的应用，修改<code>webpack</code>我不想<code>eject</code>内部配置，于是用<code>react-app-rewired</code>和<code>customize-cra</code>（实际这个没用到，因为没有写成模块化的形式）修改。通过如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">config.plugins.push(</span><br><span class="line">    new webpack.ContextReplacementPlugin(/highlight\.js\/lib\/languages$/, new RegExp(`^./(cpp)$`))</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>但这个代码是在理解了<code>webpack</code>的配置形式才写出来的，相关的参考资料有：<a href="https://juejin.cn/post/6844904190083350542" rel="external nofollow noreferrer">非常棒的</a>，<a href="https://juejin.cn/post/6969018138591494158" rel="external nofollow noreferrer">了解的</a>，<a href="https://juejin.cn/post/7046616302521155614#heading-15" rel="external nofollow noreferrer">优化方向的</a>。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="update.png" alt="update" /></p>
+<p>可以看见<code>highlight</code>插件的大小陡然减少了。</p>
+<p>然后又对一些常用库比如<code>reach, reach-router, axio, ace</code>等库采用<code>cdn</code>引入，同时将原本用的关于时间的插件<code>moment</code>插件换成了更加轻量级的<code>dateformat</code>插件，也减少了体积。最终效果如下。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="result.png" alt="result" /></p>
+<p>而关于<code>cdn</code>的，一开始采用的是<code>https://www.bootcdn.cn</code>，但在实际测试时网站有时加载比较慢，由于从这个网站获取<code>js</code>慢导致的，因此最后还是把这些<code>js</code>库放到了自己的服务器里，用腾讯云的<code>cdn</code>来缓存这些网页文件。新用户能有几十G的流量应该够用的。</p>
+<h2 id="杂项"><a class="markdownIt-Anchor" href="#杂项"></a> 杂项</h2>
+<p>本地开发时数据转发的问题，是解决cookies跨域（？）的问题，在<code>src</code>文件夹下创立<code>setupProxy.js</code>，内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const &#123;createProxyMiddleware&#125; = require(&quot;http-proxy-middleware&quot;);</span><br><span class="line">    module.exports = function(app)&#123;</span><br><span class="line">        app.use(</span><br><span class="line">            createProxyMiddleware(&quot;/api&quot;,&#123;</span><br><span class="line">                target:&quot;http://127.0.0.1:9000&quot;,</span><br><span class="line">                changeOrigin:true,</span><br><span class="line">            &#125;)</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>关于用<code>react-app-rewired</code>进行<code>webpack</code>的配置的<code>config-overrides.js</code>文件，创立于与<code>package.json</code>同级目录，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var webpack = require(&#x27;webpack&#x27;)</span><br><span class="line">const cssminimizerplugin = require(&quot;css-minimizer-webpack-plugin&quot;)</span><br><span class="line">// const minicssextractplugin = require(&quot;mini-css-extract-plugin&quot;);</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    webpack: function(config, env) &#123;</span><br><span class="line">        console.log(&#x27;env&#x27;, env);</span><br><span class="line"></span><br><span class="line">        config.plugins.push(</span><br><span class="line">            new webpack.contextreplacementplugin(/highlight\.js\/lib\/languages$/, new regexp(`^./(cpp)$`))</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        // config.plugins.push(</span><br><span class="line">        //     new minicssextractplugin(&#123;</span><br><span class="line">        //         filename: &quot;[name].css&quot;,</span><br><span class="line">        //         chunkfilename: &quot;[id].css&quot;,</span><br><span class="line">        //     &#125;),</span><br><span class="line">        // );</span><br><span class="line"></span><br><span class="line">        // config.module.rules.push(&#123;</span><br><span class="line">        //     test: /\.css$/,</span><br><span class="line">        //     use: [minicssextractplugin.loader, &quot;css-loader&quot;],</span><br><span class="line">        // &#125;);</span><br><span class="line"></span><br><span class="line">        config.optimization.minimizer.push(</span><br><span class="line">            new cssminimizerplugin()</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        config.externals = &#123;</span><br><span class="line">            &#x27;react&#x27;: &#x27;react&#x27;,</span><br><span class="line">            &#x27;react-dom&#x27;: &#x27;reactdom&#x27;,</span><br><span class="line">            // &#x27;react-router-dom&#x27;: &#x27;reactrouterdom&#x27;,</span><br><span class="line">            &#x27;ace-builds&#x27;: &#x27;ace&#x27;,</span><br><span class="line">            &#x27;react-ace&#x27;: &#x27;reactace&#x27;,</span><br><span class="line">            &#x27;axios&#x27;: &#x27;axios&#x27;,</span><br><span class="line">            &#x27;highlight.js&#x27;:&#x27;hljs&#x27;,</span><br><span class="line">            &#x27;semantic-ui-react&#x27;: &#x27;semanticuireact&#x27;,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return config;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中引用<code>cdn</code>的写法，也即<code>externals</code>里面编写的形式，在上面提到的<a href="https://juejin.cn/post/6844904190083350542" rel="external nofollow noreferrer">非常棒的</a>的介绍里有提到。非常感谢这位作者。</p>
+<p>简单来说，冒号前面是包名，后面是该脚本<code>js</code>最终赋值给window的全局变量名称。而这个名称通过查阅该<code>js</code>脚本就可以找到。一般就位于<code>js</code>脚本的开头或结尾。</p>
+<h2 id="结果"><a class="markdownIt-Anchor" href="#结果"></a> 结果</h2>
+<p>最终，网页访问压力都由腾讯的<code>cdn</code>承担了，后端<code>api</code>的访问由服务器承担。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="cdn1.png" alt="cdn1" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="cdn2.png" alt="cdn2" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="back.png" alt="back" /></p>
+<p>在实际上线时，全程监测着服务器的<code>cpu</code>占用率和流量情况。由于前一天发现轻量级服务器不支持短时提升带宽，对当前服务器只有10M带宽感到担忧，但从最终结果来看，带宽高峰期也就出现在比赛开始前和比赛即将结束时，<code>cdn</code>的带宽高峰期有<code>11M</code>，只承担了后端<code>api</code>的服务器带宽高峰期也有<code>9M</code>（但感觉有点异常），可见<code>cdn</code>很好的缓解了流量高峰时服务器的压力，将前端后端访问分离开，才保证了本次比赛的顺利，因为两者加起来所需要的带宽超过了服务器本身的带宽。</p>
+<h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
+<p>最后的最后，感谢你能看到最后。这里只是一些个人的碎碎念。</p>
+<p>总而言之，在最初阶段，应该有充足的时间进行设计，规划好前端页面的组织，前后端数据格式，后端代码的结构。一个良好的设计能够大大降低后续代码的编写复杂度和维护难度，毕竟磨刀不误砍柴工。</p>
+<p>在优化方面，前端涉及的领域是<code>webpack</code>，优化除了上述提到的<code>js</code>，实际还有<code>css</code>方面的优化。该网站虽然主要的<code>js</code>只有<code>40kb</code>，但<code>css</code>文件有<code>500kb</code>。可能是因为包括了<code>semantic</code>库的缘故。但由于后来在服务器的<code>nginx</code>开启了<code>gzip</code>压缩，传输的<code>css</code>只有<code>100kb</code>，因此也就没有太大的优化了。后端的由于不太熟悉，除了用高性能的框架之外，还暂时不知该如何优化。</p>
+<p>如果有以后，<code>UI</code>库想试试<a href="https://mantine.dev" rel="external nofollow noreferrer">mantine</a>库。而<code>golang</code>用用<a href="https://github.com/gourouting/singo" rel="external nofollow noreferrer">singo</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>第一次网站的搭建和优化经历</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a href="http://blog.lanly.vip/posts/cd8d5fec.html">http://blog.lanly.vip/posts/cd8d5fec.html</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>作者</h><div class="post-copyright-cc-info"><h>Lanly</h></div></div><div class="post-copyright-c"><h>发布于</h><div class="post-copyright-cc-info"><h>2022-04-18</h></div></div><div class="post-copyright-u"><h>更新于</h><div class="post-copyright-cc-info"><h>2025-08-19</h></div></div><div class="post-copyright-c"><h>许可协议</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener external nofollow noreferrer" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener external nofollow noreferrer" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/">碎碎念</a><a class="post-meta__tags" href="/tags/react/">react</a><a class="post-meta__tags" href="/tags/golang/">golang</a><a class="post-meta__tags" href="/tags/webpack/">webpack</a></div><div class="post_share"><div class="social-share" data-image="/img/chino/vec/chino1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text"> 设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text"> 编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text"> 优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%82%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 杂项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">6.</span> <span class="toc-text"> 结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text"> 总结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Lanly</div><div class="framework-info"><span>框架 </span><a href="https://hexo.io" rel="external nofollow noreferrer">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" rel="external nofollow noreferrer">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" rel="external nofollow noreferrer" target="_blank">粤ICP备2021014426</a></div><script type="text/javascript" id="maid-script" src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js?v=undefined"></script><script>if (window.mermaid) {
+  var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptioins'));
+  mermaid.initialize(options);
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    btf.addModeChange('mermaid', () => {
+      window.runMermaid()
+    })
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><script defer src="/js/light.js"></script><script defer src="/js/universe.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer src="/js/homeessay.js"></script><canvas id="universe"></canvas><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('bbTimeList');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino58.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-06-06</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">Webots——Fianl大作业</a><div class="blog-slider__text">小组合作作业</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-05-01</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">滚榜程序Resolver源码阅读</a><div class="blog-slider__text">太难了.jpg</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterend",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>

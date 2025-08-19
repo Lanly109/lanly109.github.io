@@ -1,0 +1,510 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>基于UDP的文件传输程序 | Lanlyの小窝</title><meta name="author" content="Lanly"><meta name="copyright" content="Lanly"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="在应用层实现TCP协议的小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于UDP的文件传输程序">
+<meta property="og:url" content="http://blog.lanly.vip/posts/2bf18a0f.html">
+<meta property="og:site_name" content="Lanlyの小窝">
+<meta property="og:description" content="在应用层实现TCP协议的小程序">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.lanly.vip/img/chino/vec/chino3.jpg">
+<meta property="article:published_time" content="2022-07-06T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-19T07:22:39.127Z">
+<meta property="article:author" content="Lanly">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="UDP">
+<meta property="article:tag" content="TCP">
+<meta property="article:tag" content="RTT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.lanly.vip/img/chino/vec/chino3.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.lanly.vip/posts/2bf18a0f.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于UDP的文件传输程序',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-19 15:22:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/var.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/menuicon.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/essay.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/home_essay_bar.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Lanlyの小窝" type="application/atom+xml">
+</head><body><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><div class="loading-img"></div><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+
+preloader.initLoading()
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><script async="async" data-pjax="data-pjax" src="/js/WaterRipple.js"></script><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/chino/vec/chino3.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Lanlyの小窝"><span class="site-name">Lanlyの小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">基于UDP的文件传输程序</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-06T04:00:00.000Z" title="发表于 2022-07-06 12:00:00">2022-07-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-19T07:22:39.127Z" title="更新于 2025-08-19 15:22:39">2025-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于UDP的文件传输程序"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>计算机网络大作业期中报告</p>
+</blockquote>
+<h2 id="项目一览与摘要"><a class="markdownIt-Anchor" href="#项目一览与摘要"></a> 项目一览与摘要</h2>
+<h3 id="项目特色"><a class="markdownIt-Anchor" href="#项目特色"></a> 项目特色</h3>
+<p>该项目在应用层实现了<code>TCP</code>协议中的众多功能以实现传输的可靠和高效：<strong>动态调整<code>RTT</code>，流量控制，阻塞控制，快速重传。</strong></p>
+<p>同时，还实现了<strong>并发接收和并发传输</strong>机制，能够同时接收或发送若干个文件。发送还支持文件夹发送，即保留文件夹结构不变地情况下发送里面的所有文件。</p>
+<p>实现了基于<code>md5</code>的<strong>断点续传</strong>功能，在传输发生中断时，下次传输时用户可以选择从上次中断之处继续传输，而不用从头传输，大大节省不必要的流量。</p>
+<p>该项目还有完善的<strong>日志记录</strong>功能，会将程序运行过程中产生的正常信息，警告信息，错误信息分别保存下来，方便查错。</p>
+<p>该项目实现了服务端和客户端<strong>双方收发文件</strong>的功能。客户端既能发送文件给服务端，也能从服务端下载文件到本地。</p>
+<p>该项目实现了数据传输的报文数据段大小由<strong>客户端决定</strong>，服务端适应的机制，使得服务端能够适应不同客户端的传输需求。</p>
+<p>该项目还有绘图功能，能够将发送过程中的参数变化绘制成图表，方便分析。</p>
+<p>经实测实现了可靠和高效传输的效果。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="result.png" alt="result" /></p>
+<p>此图为从连接校园网的终端传输一个10M的文件到阿里云服务器的结果，传输期间触发了一次超时重传，<code>236</code>次快速重传，总耗时<code>34</code>秒。</p>
+<p>本项目基于<strong>python</strong>语言编写。</p>
+<p>项目结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── Client.py		# 客户端程序</span><br><span class="line">├── config</span><br><span class="line">│   ├── config.py	# 配置信息</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── Logger.py	# 日志信息</span><br><span class="line">│   ├── Receiver.py	# 接收文件类</span><br><span class="line">│   ├── Sender.py	# 发送文件类</span><br><span class="line">│   └── util.py		# 功能函数，包括文件核对等</span><br><span class="line">└── Server.py		# 服务端程序</span><br></pre></td></tr></table></figure>
+<h2 id="需求分析"><a class="markdownIt-Anchor" href="#需求分析"></a> 需求分析</h2>
+<p>众所周知，<code>UDP</code>是不可靠协议，但能够对应用层数据的发送控制更为精准，无连接建立，无连接状态使得<code>UDP</code>能较少地占用终端资源，且<code>UDP</code>分组的首部开销小，仅有<code>8</code>字节。而<code>TCP</code>是通用的可靠传输协议，适用范围很广，其首部有<code>20</code>字节的开销。因此对于文件传输来说，有许多信息是没有必要的。因此实现专门适用于文件传输的可靠协议是有必要的。而要用一个不可靠协议实现可靠传输，就如同<code>TCP</code>一样要在不可靠的IP协议下实现可靠传输一样，我们要将能够确保可靠的机制在<code>UDP</code>的上一层：应用层实现。于是我们需要参考<code>TCP</code>实现可靠传输的一些机制，在应用层上实现。同时为了改善用户体验，实现一些基本的需求比如断点续传，文件夹发送等功能。</p>
+<h2 id="设计思想"><a class="markdownIt-Anchor" href="#设计思想"></a> 设计思想</h2>
+<p>本项目基于建造者（<code>Builder</code>）模式设计。</p>
+<p>服务端（<code>Server</code>）和客户端（<code>Client</code>）都有发送和接收文件的功能，两者在这两个功能上行为一致，只有起初的发送请求等行为不同。</p>
+<p>于是服务端能够根据自身的身份（发送者还是接收者），创建相应的<code>Sender</code>或<code>Receiver</code>进行发送或接收文件。同理客户端也能如此。</p>
+<p>同时为实现并发传输及可靠性，服务端有个主进程，监听客户端的请求，并创建一个子服务进程，处理该请求，而主进程继续监听请求。</p>
+<p>客户端同样也有个主进程，负责扫描发送的文件（夹），对每一个要发送的文件，创建一个子客户进程向服务端发送请求。当所有子进程结束后，主进程将根据子进程发送文件时产生的数据进行汇总，绘制图表。</p>
+<p>子服务进程在处理请求，以及子客户进程在执行请求时，会根据自身的身份（发送者还是接收者），创建相应的类，并调用类方法执行。</p>
+<h2 id="核心算法"><a class="markdownIt-Anchor" href="#核心算法"></a> 核心算法</h2>
+<h3 id="报文首部"><a class="markdownIt-Anchor" href="#报文首部"></a> 报文首部</h3>
+<table>
+<thead>
+<tr>
+<th>签名sign （16bit）</th>
+<th>窗口大小rwnd(16bit)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>报文序号(32bit)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>数据段(MSS)</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>其中<code>rwnd</code>对于接收方发送的报文而言，就是缓冲区的剩余大小，单位是<code>MSS</code>.</p>
+<p>对于发送方发送的报文而言，用于特殊标记，如终止传输报文，请求端口报文等。</p>
+<p><code>ACK</code>报文，数据段为空。报文序号表示确认的报文序号。</p>
+<p><strong>注意</strong>，此处的<code>ACK</code>报文序号与<code>TCP</code>中的<code>ACK</code>不同。此处的ACK序号为接收到的最后一个报文序号，并非<code>TCP</code>里的接收到的最后一个报文序号加一。可以理解此处的<code>ACK</code>与<code>TCP</code>里的<code>ACK</code>的关系为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>C</mi><mi>K</mi><mo>=</mo><mi>A</mi><mi>C</mi><msub><mi>K</mi><mrow><mi>T</mi><mi>C</mi><mi>P</mi></mrow></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">ACK = ACK_{TCP} - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></p>
+<p>除了请求报文的<code>MSS</code>是双方约定好之外，握手和数据传输报文的<code>MSS</code>大小由客户端告知服务端，在请求报文中告知。</p>
+<p>握手报文中，数据段的数据之间采用分隔符<code>spliter</code>（定义在<code>config/config.py</code>文件中）区分。</p>
+<h3 id="可靠机制"><a class="markdownIt-Anchor" href="#可靠机制"></a> 可靠机制</h3>
+<p>为实现可靠机制，需要对发出去的每一份报文收到相应的<code>ACK</code>确认报文，此处实现和<code>TCP</code>一致。</p>
+<p>同时，为防止无关报文的干扰，传输通信的报文都有一个唯一确定的<strong>签名sign</strong>进行核验，不通过的报文将被丢弃。</p>
+<p>报文出了签名外，还标有序号，以确保不被乱序收到。</p>
+<h3 id="动态调整rtt"><a class="markdownIt-Anchor" href="#动态调整rtt"></a> 动态调整RTT</h3>
+<p>实现自<code>Jacobson / Karels</code> 算法</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo>=</mo><mi>S</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo>+</mo><mi>α</mi><mo stretchy="false">(</mo><mi>R</mi><mi>T</mi><mi>T</mi><mtext>–</mtext><mi>S</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">SRTT = SRTT + \alpha ( RTT – SRTT )</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord">–</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mclose">)</span></span></span></span> —— 计算平滑 RTT</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mi>e</mi><mi>v</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>β</mi><mo stretchy="false">)</mo><mo>∗</mo><mi>D</mi><mi>e</mi><mi>v</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo>+</mo><mi>β</mi><mo>∗</mo><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo>−</mo><mi>S</mi><mi>R</mi><mi>T</mi><mi>T</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">DevRTT = ( 1-\beta ) * DevRTT + \beta * ( | RTT - SRTT | )</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span> ——计算平滑 RTT 和真实的差距（加权移动平均）</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>T</mi><mi>O</mi><mo>=</mo><mi>μ</mi><mo>∗</mo><mi>S</mi><mi>R</mi><mi>T</mi><mi>T</mi><mo>+</mo><mi mathvariant="normal">∂</mi><mo>∗</mo><mi>D</mi><mi>e</mi><mi>v</mi><mi>R</mi><mi>T</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">RTO= \mu * SRTT + \partial * DevRTT</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.6597200000000001em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.125</mn><mo separator="true">,</mo><mi>β</mi><mo>=</mo><mn>0.25</mn><mo separator="true">,</mo><mi>μ</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">∂</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\alpha = 0.125, \beta = 0.25, \mu = 1, \partial = 4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">1</span><span class="mord">2</span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">2</span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span>，取自<a href="https://datatracker.ietf.org/doc/html/rfc6298" rel="external nofollow noreferrer">RFC6298</a>。RTT是测量值，为一份报文从发出到接收到ACK报文所经历的时间。</p>
+<h3 id="流量控制"><a class="markdownIt-Anchor" href="#流量控制"></a> 流量控制</h3>
+<p>考虑到服务端和客户端性能上的差异，接收方收到的包并不会马上写入文件，而是会放到缓冲区里，而当缓冲区满时，接收方就不能接收新的数据包，防止缓冲区溢出，而此时如果发送方继续发送报文则会导致丢失，因此当客户端和服务端性能差异过大时，要避免不必要的发包。</p>
+<p>实现机制和<code>TCP</code>类似，接收方每一次<code>ACK</code>回复报文中会带有当前缓冲区剩余长度，发送方会根据<code>ACK</code>报文中的剩余长度，动态调整自己的发送行为，必要时暂停发送。</p>
+<h3 id="阻塞控制"><a class="markdownIt-Anchor" href="#阻塞控制"></a> 阻塞控制</h3>
+<p>除了考虑服务端和客户端之外，还要考虑当前网络状况，如出现频繁丢包现象时不应保持持续发包，以降低发送成功率，加剧网络阻塞。</p>
+<p>实现机制和<code>TCP</code>类似，发送方维护一个发送状态，有诸如<em>慢启动</em>，<em>阻塞避免</em>，<em>快速恢复</em>等状态，以及一个阻塞窗口，和流量控制里的流量窗口（接收方缓冲区剩余长度）共同控制发送方的发送行为。</p>
+<h3 id="快速重传"><a class="markdownIt-Anchor" href="#快速重传"></a> 快速重传</h3>
+<p>限于接收方采用按序收包的策略，当出现包丢失时，能够通过接收方发送的多次冗余<code>ACK</code>得知。</p>
+<p>实现机制和<code>TCP</code>类似，当发送方接收到三次及以上冗余<code>ACK</code>后，会立刻重发仍未被确认的数据包。</p>
+<h3 id="断点续传"><a class="markdownIt-Anchor" href="#断点续传"></a> 断点续传</h3>
+<p>由于文件是从头开始发送，中间传输故障时，我们能够知晓接收方收到的数据是文件开头一定大小的。</p>
+<p>客户端和服务端在进行握手时，接收方会向发送方发送自身文件的大小size和md5码，接收方接收到后，计算发送文件前<code>size</code>大小的<code>md5</code>码，与接收方发送的<code>md5</code>码进行比对。如果一致，说明文件一致，则向用户询问是否续传还是重传。</p>
+<h3 id="并发传输"><a class="markdownIt-Anchor" href="#并发传输"></a> 并发传输</h3>
+<p>运用多进程，使得每个进程负责一个文件的收发，达到并发机制。</p>
+<h2 id="软件架构"><a class="markdownIt-Anchor" href="#软件架构"></a> 软件架构</h2>
+<p>本项目共有四个模块，十分清晰简单。其类成员方法如下所示。</p>
+<pre class="mermaid">classDiagram
+    class Sender{
+    +file
+    +send()
+    +update_cwnd()
+    +resend()
+    +update_RTO()
+    +receive()
+    +summary()
+    +start()
+    }
+    class Receiver{
+    +file
+    +receive()
+    +write()
+    +start()
+    }
+    class Server{
+    +Shakehand()
+    +start()
+    }
+    class Client{
+    +Getport()
+    +Shakehand()
+    +start()
+    }
+    Sender --* Server
+    Sender --* Client
+    Receiver --* Server
+    Receiver --* Client</pre>
+<h2 id="流程图"><a class="markdownIt-Anchor" href="#流程图"></a> 流程图</h2>
+<p>这里展示客户端发送文件给服务端，续传方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Participant User</span><br><span class="line">Participant Client</span><br><span class="line">Participant SubServer</span><br><span class="line">Participant Server</span><br><span class="line"></span><br><span class="line">Client-&gt;Server: 我有个请求\n报文数据段大小为MSS\n报文签名为sign</span><br><span class="line">Note right of Server: Package 0</span><br><span class="line">Server--&gt;Client: OK\n请发送请求到这个端口</span><br><span class="line">Client-&gt;SubServer :这是文件名、\n文件大小、md5码</span><br><span class="line">Note right of SubServer: 收到文件名，\n获取自身的文件大小\n和md5码</span><br><span class="line">Note left of Client: Package 1</span><br><span class="line">SubServer --&gt; Client: OK，这是我这里存在的\n文件的部分数据大小\n和md5</span><br><span class="line">Note left of Client: 核对服务端发来\n文件信息</span><br><span class="line">Client -&gt; User: 发现服务端\n有部分数据\n是否仅发送剩余数据</span><br><span class="line">User --&gt; Client :OK</span><br><span class="line">Client -&gt; SubServer : 我将续传发送剩余数据</span><br><span class="line">Note right of SubServer: Package 2</span><br><span class="line">SubServer --&gt; Client : OK</span><br><span class="line">Note left of Client : 开始发送文件</span><br><span class="line">Client -&gt; SubServer : Data Package 3</span><br><span class="line">Client -&gt; SubServer : Data Package 4</span><br><span class="line">SubServer --&gt; Client : ACK 3</span><br><span class="line">SubServer --&gt; Client : ACK 4</span><br><span class="line">Client -&gt; SubServer : Data Package 5</span><br><span class="line">Client -&gt; SubServer : Data Package 6</span><br><span class="line">SubServer --&gt; Client : ACK 5</span><br><span class="line">SubServer --&gt; Client : Lost ACK 6</span><br><span class="line">Note left of Client : Timeout \nwhen receiving \nACK 6</span><br><span class="line">Client -&gt; SubServer : Data Package 6</span><br><span class="line">SubServer --&gt; Client : ACK 6</span><br><span class="line">Client -&gt; SubServer : Lost Data Package 7</span><br><span class="line">Client -&gt; SubServer : Data Package 8</span><br><span class="line">Client -&gt; SubServer : Data Package 9</span><br><span class="line">Client -&gt; SubServer : Data Package 10</span><br><span class="line">SubServer --&gt; Client : ACK 6</span><br><span class="line">SubServer --&gt; Client : ACK 6</span><br><span class="line">SubServer --&gt; Client : ACK 6</span><br><span class="line">Note left of Client : 快速重传</span><br><span class="line">Client -&gt; SubServer : Data Package 7</span><br><span class="line">Client -&gt; SubServer : Data Package 8</span><br><span class="line">Client -&gt; SubServer : Data Package 9</span><br><span class="line">Client -&gt; SubServer : Data Package 10</span><br><span class="line">SubServer --&gt; Client : ACK 7</span><br><span class="line">SubServer --&gt; Client : ACK 8</span><br><span class="line">SubServer --&gt; Client : ACK 9</span><br><span class="line">SubServer --&gt; Client : ACK 10, buffer is full</span><br><span class="line">Note left of Client : wait a second</span><br><span class="line">Client -&gt; SubServer : Is buffer still full?</span><br><span class="line">SubServer --&gt; Client : no, continue, please.</span><br><span class="line">Client -&gt; SubServer : Fin Package 11</span><br><span class="line">SubServer --&gt; Client : FIN ACK 11</span><br><span class="line">Note right of SubServer : 检查接收文件的md5与\n从一开始从客户端接收的md5\n是否一致</span><br><span class="line">Note right of SubServer : Close</span><br><span class="line">Client -&gt; User : I FINISH! \nHere is result.</span><br><span class="line">User --&gt; Client: Greate Jobs!</span><br><span class="line">Note left of Client : Close</span><br></pre></td></tr></table></figure>
+<p>其余方式与此图非常类似。</p>
+<p>关于异常处理，在发送文件前的握手阶段，如果有任何报文丢失的话，接收报文方将触发超时机制，重传上一份报文。连续超时<code>5</code>次则握手失败，关闭进程。</p>
+<p>签名重复情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Participant Client</span><br><span class="line">Participant Server</span><br><span class="line"></span><br><span class="line">Client-&gt;Server: 我有个请求\n报文数据段大小为MSS\n报文签名为sign</span><br><span class="line">Note right of Server: 发现签名已被其他请求使用，\n且来自不同的ip:port</span><br><span class="line">Server--&gt;Client: RESET，签名重复，请更换签名</span><br><span class="line">Client-&gt;Server: 好的，我有个请求\n报文数据段大小为MSS\n新报文签名为Sign</span><br><span class="line">Server--&gt;Client: OK，请发送请求到这个端口</span><br></pre></td></tr></table></figure>
+<p>收到任何签名<code>sign</code>不对的报文均丢弃。</p>
+<p>收到的任何序号不对的报文将丢弃，并重发上一个报文。</p>
+<p>发送数据过程中出现的异常处理和<code>TCP</code>的异常处理一致，上面的流程图有所展示。</p>
+<p><code>Sender</code>内部的函数调用关系如下图所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">digraph G &#123;</span><br><span class="line"></span><br><span class="line">  subgraph cluster_0 &#123;</span><br><span class="line">    style=filled;</span><br><span class="line">    color=lightgrey;</span><br><span class="line">    node [style=filled,color=white];</span><br><span class="line">    Start -&gt; Send_Data</span><br><span class="line">    Start -&gt; Receive_ACK</span><br><span class="line">    Send_Data -&gt; pkg_Buffer</span><br><span class="line">    Receive_ACK -&gt; resend</span><br><span class="line">    Receive_ACK -&gt; update_RTO</span><br><span class="line">    Receive_ACK -&gt; update_cwnd</span><br><span class="line">    resend -&gt; pkg_Buffer</span><br><span class="line">    label = &quot;Sender&quot;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Client -&gt; Start </span><br><span class="line">  SubServer -&gt; Start</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Receiver</code>内部的函数调用关系如下图所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">digraph F&#123;</span><br><span class="line"></span><br><span class="line">  subgraph cluster_1 &#123;</span><br><span class="line">    node [style=filled];</span><br><span class="line">    Write -&gt; Data_Buffer</span><br><span class="line">    Receive_Data -&gt; Data_Buffer</span><br><span class="line">    Start -&gt; Write</span><br><span class="line">    Start -&gt; Receive_Data</span><br><span class="line">    label = &quot;Receiver&quot;;</span><br><span class="line">    color=blue</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Client -&gt; Start</span><br><span class="line">  SubServer -&gt; Start</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p><code>Sender</code>和<code>Receiver</code>的交互如下图所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">digraph F&#123;</span><br><span class="line"></span><br><span class="line">  subgraph cluster_0 &#123;</span><br><span class="line">    style=filled;</span><br><span class="line">    color=lightgrey;</span><br><span class="line">    node [style=filled,color=white];</span><br><span class="line">    Send_Data </span><br><span class="line">    Receive_ACK</span><br><span class="line">    label = &quot;Sender&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">  subgraph cluster_1 &#123;</span><br><span class="line">    style=filled;</span><br><span class="line">    node [style=filled,color=white];</span><br><span class="line">    Receive_Data</span><br><span class="line">    label = &quot;Receiver&quot;;</span><br><span class="line">    color=lightgrey</span><br><span class="line">  &#125;</span><br><span class="line">  Receive_Data -&gt; Receive_ACK</span><br><span class="line">  Send_Data -&gt; Receive_Data</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="测试结果与讨论"><a class="markdownIt-Anchor" href="#测试结果与讨论"></a> 测试结果与讨论</h2>
+<p>发送的<code>MSS</code>报文大小会影响到传输效果。</p>
+<p>在实测中，<code>MSS</code>太小时，总发包数量过多，尽管一次发包数增加，但无法弥补总包数增多带来的时间上的增加。<code>MSS</code>太大时，接收方难以快速处理接收到的数据包，导致丢包发生，且包太大时，经过中间路由会导致数据包乱序到达，由于接收方必须按序接收，这容易触发发送方的快速重传机制。</p>
+<p>当<code>MSS</code>过小，比如<code>256Byte</code>时，两次传输一个<code>3MB</code>的文件，发送方记录的数据图表如下：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="256.png" alt="256" /></p>
+<p>当<code>MSS</code>为<code>1024Byte</code>时，其记录如下：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="2566.png" alt="2566" /></p>
+<p>这两张图中<code>cwnd</code>曲线很好地符合教科书上的曲线特点。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="re.png" alt="re" /></p>
+<p>这是发送方最后输出的信息。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="se.png" alt="se" /></p>
+<p>这是接收方最后输出的信息，可以看到文件传输无误。</p>
+<p>但当<code>MSS</code>调整为<code>1024 * 10Byte</code>时，发送方记录的数据图表如下：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="1024.png" alt="1024" /></p>
+<p>可以看到，<code>cwnd</code>呈周期性震动，在接收方里的错误信息可以看到</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="er.png" alt="er" /></p>
+<p>接收方在接收数据时出现了周期性地数据包丢失，亦或者说是乱序收到，由于接收方必须按序接收，一旦乱序就会重传<code>ACK</code>报文，易让发送方产生多次没必要的超时重传。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="res.png" alt="res" /></p>
+<p>从发送方的结果可以看出，消耗的时间反而更长了，因为期间产生了过多的快速重传机制。</p>
+<p>刚刚传输了一次<code>qwq</code>文件，再次传输时会提示文件已存在，询问用户是否续传：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="qqq.png" alt="qqq" /></p>
+<p>输入<code>1</code>表示续传，而由于文件已经完整，因而就只发了一个终止<code>FIN</code>包，传输就结束了。</p>
+<p>将<code>MSS</code>调整为<code>1024 * 5Byte</code>，结果如下：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="qwe.png" alt="qwe" /></p>
+<p>可以看到，快速重传的次数减少了，但由于发送的数据包的数量增加，总耗时与上面差不多。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="ober.png" alt="ober" /></p>
+<p>仔细观察出现<code>warning</code>的情况，可以推断出并不是包丢了，而是数据包在传输过程中顺序被打乱了，这就导致了之后一连串数据包的错位，此时<code>cwnd</code>的作用就出现了，不断减小的窗口能够很快缓解数据包乱序带来的现象，但这在一定程度上消耗了一定的时间和网络资源来解决这个问题。</p>
+<p>不过好在本程序支持断点续传，此时我们重新启动传输，也可以解决此问题。</p>
+<p>但同样<code>MSS</code>，在内网传输时，结果如下：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="neiwangtu.png" alt="neiwangtu" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="neiwang.png" alt="neiwang" /></p>
+<p>可以看出内网的网络环境明显优于外网。</p>
+<h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
+<p>通过这次在公网进行文件传输的测试，可以得知外网环境较为复杂，当传输数据包大小较大时，由于外网传输路径的复杂性，期间的路由器等网络设备对数据包的处理可能容易造成乱序，进而影响应用层数据包的接收。同时在出现乱序的现象，我们也看到<code>cwnd</code>阻塞控制所起到的作用：它迅速减少同时发包数量，防止数据包乱序现象的持续。因为此时已经是乱序了，接收端接收到的乱序包混杂了很多重发包，如果这又造成多次<code>ACK</code>重发的话，会进一步触发发送方的快速重传机制，导致这种现象的加剧。</p>
+<p>从实验中我们也发现，丢包现象相对于数据包乱序现象发生次数较小，如果接收方采用选择重传的机制，即不要求数据包要按序收到，允许在一段小的时间内乱序，进而将数据包根据序号重排，这或许能有效减少此种乱序现象导致的回退N步方式的快速重传机制，能有效改善传输的时间。但由于需要缓存收到的数据包，将数据包重组排序，这在一定程度上会占用服务端的<code>CPU</code>资源，当有许多个并发任务传输时对传输的稳定性可能是有一定的影响。</p>
+<p>从这次实验也可以看出来，为了传输的可靠性先人做了许多的措施，在这次代码的编写时，也根据实际情况，对<code>TCP</code>类似机制的实现做了微调，尽管不能完美的解决问题，我们只能接受一定程度上的缺陷，尽可能实现好的效率。在起初的程序设计中，曾为了实现高效可靠的传输斟酌了各种可能的方法，例如考虑握手的实现方式，考虑每一步如果出现差错如何处理，实现选择重传还是回退N步等，超时重传的时间计量应该如何进行，是每个包一个时间还是一个<code>ACK</code>接收间隔一个时间等等，虽然没想到一个能完美无缺的方案，但我们还是得选一个缺陷允许接受的方案实现。或许在未来，网络物理条件改善，在物理链路层能保证可靠传输的话，应该就不需要这些了。</p>
+</article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>基于UDP的文件传输程序</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a href="http://blog.lanly.vip/posts/2bf18a0f.html">http://blog.lanly.vip/posts/2bf18a0f.html</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>作者</h><div class="post-copyright-cc-info"><h>Lanly</h></div></div><div class="post-copyright-c"><h>发布于</h><div class="post-copyright-cc-info"><h>2022-07-06</h></div></div><div class="post-copyright-u"><h>更新于</h><div class="post-copyright-cc-info"><h>2025-08-19</h></div></div><div class="post-copyright-c"><h>许可协议</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener external nofollow noreferrer" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener external nofollow noreferrer" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/UDP/">UDP</a><a class="post-meta__tags" href="/tags/TCP/">TCP</a><a class="post-meta__tags" href="/tags/RTT/">RTT</a></div><div class="post_share"><div class="social-share" data-image="/img/chino/vec/chino3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/2d0ac27e.html" title="Deep Reinforcement Learning for ENAS"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino72.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-14</div><div class="title">Deep Reinforcement Learning for ENAS</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%80%E8%A7%88%E4%B8%8E%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text"> 项目一览与摘要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%89%B9%E8%89%B2"><span class="toc-number">1.1.</span> <span class="toc-text"> 项目特色</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text"> 需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="toc-number">3.</span> <span class="toc-text"> 设计思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text"> 核心算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E6%96%87%E9%A6%96%E9%83%A8"><span class="toc-number">4.1.</span> <span class="toc-text"> 报文首部</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%9D%A0%E6%9C%BA%E5%88%B6"><span class="toc-number">4.2.</span> <span class="toc-text"> 可靠机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4rtt"><span class="toc-number">4.3.</span> <span class="toc-text"> 动态调整RTT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="toc-number">4.4.</span> <span class="toc-text"> 流量控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="toc-number">4.5.</span> <span class="toc-text"> 阻塞控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0"><span class="toc-number">4.6.</span> <span class="toc-text"> 快速重传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0"><span class="toc-number">4.7.</span> <span class="toc-text"> 断点续传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E4%BC%A0%E8%BE%93"><span class="toc-number">4.8.</span> <span class="toc-text"> 并发传输</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="toc-number">5.</span> <span class="toc-text"> 软件架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">6.</span> <span class="toc-text"> 流程图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C%E4%B8%8E%E8%AE%A8%E8%AE%BA"><span class="toc-number">7.</span> <span class="toc-text"> 测试结果与讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text"> 总结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Lanly</div><div class="framework-info"><span>框架 </span><a href="https://hexo.io" rel="external nofollow noreferrer">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" rel="external nofollow noreferrer">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" rel="external nofollow noreferrer" target="_blank">粤ICP备2021014426</a></div><script type="text/javascript" id="maid-script" src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js?v=undefined"></script><script>if (window.mermaid) {
+  var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptioins'));
+  mermaid.initialize(options);
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    btf.addModeChange('mermaid', () => {
+      window.runMermaid()
+    })
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><script defer src="/js/light.js"></script><script defer src="/js/universe.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer src="/js/homeessay.js"></script><canvas id="universe"></canvas><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('bbTimeList');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino58.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-06-06</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">Webots——Fianl大作业</a><div class="blog-slider__text">小组合作作业</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-05-01</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">滚榜程序Resolver源码阅读</a><div class="blog-slider__text">太难了.jpg</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterend",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>

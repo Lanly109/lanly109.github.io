@@ -1,0 +1,463 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Deep Reinforcement Learning for ENAS | Lanlyの小窝</title><meta name="author" content="Lanly"><meta name="copyright" content="Lanly"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="Paper Reproduction and Improvement">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Reinforcement Learning for ENAS">
+<meta property="og:url" content="http://blog.lanly.vip/posts/2d0ac27e.html">
+<meta property="og:site_name" content="Lanlyの小窝">
+<meta property="og:description" content="Paper Reproduction and Improvement">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.lanly.vip/img/chino/vec/chino72.jpg">
+<meta property="article:published_time" content="2022-06-14T06:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-19T07:22:39.120Z">
+<meta property="article:author" content="Lanly">
+<meta property="article:tag" content="ENAS">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Cuda">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.lanly.vip/img/chino/vec/chino72.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.lanly.vip/posts/2d0ac27e.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Deep Reinforcement Learning for ENAS',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-19 15:22:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/var.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/menuicon.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/essay.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/home_essay_bar.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Lanlyの小窝" type="application/atom+xml">
+</head><body><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><div class="loading-img"></div><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+
+preloader.initLoading()
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><script async="async" data-pjax="data-pjax" src="/js/WaterRipple.js"></script><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/chino/vec/chino72.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Lanlyの小窝"><span class="site-name">Lanlyの小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Deep Reinforcement Learning for ENAS</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-06-14T06:00:00.000Z" title="发表于 2022-06-14 14:00:00">2022-06-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-19T07:22:39.120Z" title="更新于 2025-08-19 15:22:39">2025-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">强化学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Deep Reinforcement Learning for ENAS"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>论文复现与改进</p>
+</blockquote>
+<h2 id="experimental-environment"><a class="markdownIt-Anchor" href="#experimental-environment"></a> Experimental Environment</h2>
+<ul>
+<li>OS：Archlinux 5.16.1-arch1-1</li>
+<li>Software：Python 3.10, Cuda 11.5</li>
+<li>Hardware: Intel CORE i5 8th Gen, NVIDIA Geforce GTX 1060</li>
+</ul>
+<h2 id="experimental-problems"><a class="markdownIt-Anchor" href="#experimental-problems"></a> Experimental Problems</h2>
+<ol>
+<li>According to the <a href="https://arxiv.org/abs/1802.03268" rel="external nofollow noreferrer">paper</a> and the <a href="https://github.com/RualPerez/AutoML" rel="external nofollow noreferrer">paper reproduction code</a>, please add comments of key step codes.</li>
+<li>Improve the deep reinforcement learning algorithm of reproducing code in this paper. The improved part needs to be different from the policy gradient algorithm of the original paper reproduction code.</li>
+<li>Apply the improved algorithm practical tasks, and illustrate the necessity and superiority of the improved algorithm for practical tasks.</li>
+</ol>
+<h2 id="solution"><a class="markdownIt-Anchor" href="#solution"></a> Solution</h2>
+<h3 id="what-is-neural-architecture-searchnas"><a class="markdownIt-Anchor" href="#what-is-neural-architecture-searchnas"></a> What is Neural Architecture Search(NAS)</h3>
+<p>As is implied by the name, it’s a searching problem. To solve some problems using reinforcement learning methods such as Q-learning, we need to design a network structure to train. Obviously, the quality of the training datas and parameters such as learning rates will affect the training effect, but the network structure is also an indicator of the training effect. So, it’s significant to design a good network structure. In the past, this task was done manually. Now we want to leave the task to a neural network. Yes, let a neural network generate a neural network!</p>
+<p>The neural network can be abstracted into a graph. The direction of the edges represents the flow direction of the input datas, and the points have an activation function, such as <code>softmax</code> and <code>tanh</code>. All the neural network should do is to generate a directed graph and place a activation function on all the points.</p>
+<h3 id="what-is-efficient-neural-architecture-searchenas"><a class="markdownIt-Anchor" href="#what-is-efficient-neural-architecture-searchenas"></a> What is Efficient Neural Architecture Search(ENAS)</h3>
+<p>Well, it’s still a neural architecture search problem, but it’s efficient. How to understand it? In fact, in order to generate a better network, we need to train this neural network, and we regard it as a Controller. For a network generated by it, how to evaluate whether it is good or bad, that is, reward? Train the network! Because of the expensive cost of time to train a network, which will slow down the training speed of the controller, we need to speed up. For example, if a network generated by controller need <code>10</code> hours to train until it convergent, that is, we need <code>10</code> hours to get a reward of the action made by controller. Imagine that you play a game, do an action, and then give you feedback for <code>10</code> hours before you can make the next action, isn’t it very uncomfortable?</p>
+<p>So, how to speed up? We can start with the trained network. The purpose of training the network is to obtain good parameters. Note that the structure of the generated network is similar sometimes, and some parameters can be retained so that there is no need for retraining, which can speed up the convergence of the network. Therefore, the key to improvement is parameter sharing.</p>
+<h3 id="the-framework-of-enas"><a class="markdownIt-Anchor" href="#the-framework-of-enas"></a> The Framework of ENAS</h3>
+<p>According to the <a href="https://arxiv.org/abs/1802.03268" rel="external nofollow noreferrer">paper</a>, it’s a searching problem. So there will be a searching space. For example, there is a complete graph with four points in the following Figure.</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="1.png" alt="A search space" /></p>
+<p>The controller is a Recurrent Neural Network, RNN, which has a flexible length of output and memory of the network outputing before. The task the controller should do is select edges and the activation function on the points. The following Figure is an example of the output of controller: <code>['tanh', 1, 'ReLU', 2, 'ReLU', 1, 'tanh']</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="2.png" alt="Example output" /></p>
+<p>The first activation function is on the <code>Node 1</code>. And the next two is about the information of <code>Node 2</code>: the data from <code>Node 1</code> will flow to <code>Node 2</code>, and the activation function on <code>Node 2</code> is <code>ReLU</code>, and so on. <code>Node 0</code> is the input and the data on it will always flow to <code>Node 1</code>. And the points which has no output edge is regarded as End Node, and we will mean all the data in End Node and flow to Output Node to get the result.</p>
+<p>From the search space we can see that all the parameters<code>(W, b)</code> of the neural network are on the edges, and when we select an edge at one time and train it. Next time we again select the same edge, the previously trained parameters can be reused.</p>
+<p>So, here is the steps of the whole framework:</p>
+<ol>
+<li>The Controller generate a network, that is, output a sequence such<br />
+as <code>['tanh', 1, 'ReLU', 2, 'ReLU', 1, 'tanh']</code></li>
+<li>Generate the network according to the sequence.</li>
+<li>Train the network.</li>
+<li>Evaluate the network, get the accuracy</li>
+<li>Controller get the reward, and learning.</li>
+</ol>
+<h3 id="problems-in-the-paper-reproduction-code"><a class="markdownIt-Anchor" href="#problems-in-the-paper-reproduction-code"></a> Problems in the paper reproduction code</h3>
+<p>Frankly speaking, this <a href="https://github.com/RualPerez/AutoML" rel="external nofollow noreferrer">code</a> is NOT a reproduction of the ENAS parameter sharing paper based on the above introduction at all.</p>
+<h4 id="it-cannt-run"><a class="markdownIt-Anchor" href="#it-cannt-run"></a> It cann’t run</h4>
+<p>This shocked me the most, although the reason why it cann’t run was not fatal.</p>
+<p>For example, in <a href="https://github.com/RualPerez/AutoML/blob/master/training.py" rel="external nofollow noreferrer">training.py</a>, <code>Line 67</code>, there is a variable named <code>val_freq</code>, but it’s undefined. Also, in <a href="https://github.com/RualPerez/AutoML/blob/master/training.py" rel="external nofollow noreferrer">training.py</a> and <a href="https://github.com/RualPerez/AutoML/blob/master/childNet.py" rel="external nofollow noreferrer">chileNet.py</a>, there are some codes using <code>numpy</code> package, which is not imported.</p>
+<h4 id="it-doesnt-have-parameter-sharing"><a class="markdownIt-Anchor" href="#it-doesnt-have-parameter-sharing"></a> It doesn’t have parameter sharing</h4>
+<p>I noticed the <a href="https://github.com/RualPerez/AutoML/issues/28" rel="external nofollow noreferrer">issues</a>, and I read the <a href="https://github.com/RualPerez/AutoML/blob/master/article.pdf" rel="external nofollow noreferrer">article</a> written by the author carefully. It doesn’t mention the parameter sharing. Good.</p>
+<p>Every time the controller generate a network, and train it, it will call <code>net.apply(weight_reset)</code> to reset the parameter. See more in <a href="https://github.com/RualPerez/AutoML/blob/master/childNet.py" rel="external nofollow noreferrer">childNet.py</a>, <code>Line 167</code>.</p>
+<p>It’s just a simple NAS, even a simplified version, which will explain next.</p>
+<h4 id="its-searching-space-is-slightly-different"><a class="markdownIt-Anchor" href="#its-searching-space-is-slightly-different"></a> Its searching space is slightly different</h4>
+<p>Its searching space consist of hidden units, instead of points. That is, its Controller will generate a sequence such as <code>[2, 8, 'tanh', 16, 4 'ReLU', 8, 2]</code>, which means there are six hidden units, whose output size are <code>2, 8, 16, 4, 8, 2</code>. Suppose the input size is <code>10</code>, then it will become size <code>2</code> through the first hidden units, and <code>8</code> through the second hidden units, and activate by <code>tanh</code> function, and become size <code>16</code> through the third hidden units, and so on.</p>
+<p>See more in <a href="https://github.com/RualPerez/AutoML/blob/master/childNet.py" rel="external nofollow noreferrer">childNet.py</a>, the <code>__init__</code> function of <code>Net</code>.</p>
+<p>Yes, this is a serial network structure, which, in graph terms, is a chain!</p>
+<h4 id="there-is-some-difference-between-code-and-artical"><a class="markdownIt-Anchor" href="#there-is-some-difference-between-code-and-artical"></a> There is some difference between code and artical</h4>
+<p>It encodes the hidden units and activation function into one vector. And for every output probability vector the controller gives, it will sample it by the probability, which means at every time, it’s possible to select a hidden unit or activation function.</p>
+<p>However, in the <a href="https://github.com/RualPerez/AutoML/blob/master/article.pdf" rel="external nofollow noreferrer">artical</a> it says the data to controller will switch.</p>
+<blockquote>
+<p><em>The lists will be switched depending on the nature of the iteration<br />
+step, so, for an odd number, the number of hidden units will be fed as<br />
+the input and for an even number, the type of the activation function<br />
+chosen is fed as the input to the memory cell of the recurrent neural<br />
+network.</em></p>
+</blockquote>
+<p>If it is the same as what is said in this article, the output of the controller should be a hidden layer, and the activation functions appear alternately. Obviously, it didn’t.</p>
+<p>See more in <a href="https://github.com/RualPerez/AutoML/blob/master/policy.py" rel="external nofollow noreferrer">policy.py</a>, <code>forward</code> function.</p>
+<h4 id="redundant-dependency-in-requirementtxt"><a class="markdownIt-Anchor" href="#redundant-dependency-in-requirementtxt"></a> Redundant dependency in requirement.txt</h4>
+<p>The <a href="https://github.com/RualPerez/AutoML/blob/master/requirements.txt" rel="external nofollow noreferrer">requirements.txt</a> contains so many packages that it didn’t depend. It just needs less than ten packages.</p>
+<h3 id="improvement"><a class="markdownIt-Anchor" href="#improvement"></a> Improvement</h3>
+<p>The main idea of the code is: define a class PolicyNet named Controller, define a class childNet which include a network. Controller generates a network information and give childNet, childNet analies the information and trains the network, gives the network accuracy as reward to Controller. Controller learns using Reinforcement learning and repeated.</p>
+<h4 id="add-parameters-sharing-feature"><a class="markdownIt-Anchor" href="#add-parameters-sharing-feature"></a> Add parameters sharing feature</h4>
+<p>To add this feature, we need to construct a graph. But here is a problem.</p>
+<p>All the points in the graph MUST have the SAME sizes of input and output. For example, the following Figure show the graph we construct with <code>5</code> points.</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="3.png" alt="Graph with 5 points" /></p>
+<p>If we select an edge from <code>Node 1</code> to <code>Node 3</code>, it requires that the output size of <code>Node 1</code> and the input size of <code>Node 3</code> <strong>MUST</strong> be the same. The same as <code>Node 1</code> and <code>Node 2</code>, therefor the <code>Node 2</code> and <code>Node 3</code> and so on. All the points must have the same input size and output size, except the input size of <code>Node 1</code> because the data from <code>Node 0</code>, which is our input, will only flow to <code>Node 1</code>.</p>
+<p>Also, the direction of edge is always from small Node to large Node, which can confirm the graph is valid, that is, a connected acyclic graph.</p>
+<p>I construct a Net when define chileNet.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">input_edge = nn.Linear(num_features, hidden_features).to(<span class="variable language_">self</span>.__device)</span><br><span class="line">hidden_edge = [nn.Linear(hidden_features, hidden_features).to(<span class="variable language_">self</span>.__device) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(layer_limit * (layer_limit - <span class="number">1</span>) // <span class="number">2</span>)]</span><br><span class="line">output_edge = nn.Linear(hidden_features, num_classes).to(<span class="variable language_">self</span>.__device)</span><br><span class="line"><span class="variable language_">self</span>.net = nn.ModuleList([input_edge, *hidden_edge, output_edge]).to(<span class="variable language_">self</span>.__device)</span><br></pre></td></tr></table></figure>
+<p>The parameters on the edges will not be reseted every training. So it’s parameters sharing.</p>
+<h4 id="change-chains-to-graph"><a class="markdownIt-Anchor" href="#change-chains-to-graph"></a> Change chains to Graph</h4>
+<p>For the network information named layers given by Controller, childNet will analizy it and train the network.</p>
+<p>For example, suppose the layers be <code>[&quot;tanh&quot;, 1, &quot;ReLU&quot;]</code>. For the odd position, it should be the source Node, and for the even position, it should be the activation function.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> pos, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(layers):</span><br><span class="line">        <span class="keyword">if</span> layer == <span class="string">&#x27;EOS&#x27;</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> pos &amp; <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(layer, <span class="built_in">str</span>):</span><br><span class="line">                <span class="keyword">raise</span> Exception(<span class="string">&quot;Network WRONG! Expect int but found str&quot;</span>)</span><br><span class="line">            <span class="keyword">if</span> layer <span class="keyword">not</span> <span class="keyword">in</span> value_node:</span><br><span class="line">                <span class="keyword">raise</span> Exception(<span class="string">&quot;Network WRONG! Index Large&quot;</span>)</span><br><span class="line">            <span class="comment"># data flow from layer to index_node</span></span><br><span class="line">            val[index_node] = <span class="variable language_">self</span>.net[<span class="variable language_">self</span>.hidden_edge(layer, index_node)](val[layer])</span><br><span class="line">            <span class="comment"># now index_node has value</span></span><br><span class="line">            value_node.add(index_node)</span><br><span class="line">            <span class="comment"># the data from layer is translated to index_node, so the layer&#x27;s data cann&#x27;t be the result data</span></span><br><span class="line">            <span class="keyword">if</span> layer <span class="keyword">in</span> end_node:</span><br><span class="line">                end_node.remove(layer)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(layer, <span class="built_in">int</span>):</span><br><span class="line">                <span class="keyword">raise</span> Exception(<span class="string">&quot;Network WRONG! Expect str but found int&quot;</span>)</span><br><span class="line">            <span class="comment"># activate the value of index_node</span></span><br><span class="line">            val[index_node] = activation_functions[layer](val[index_node])</span><br><span class="line"></span><br><span class="line">            index_node = index_node + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Function <code>hidden_edge(st, ed)</code> will give back the network edge which starting from Node st to Node ed.</p>
+<p>Acutually, we need to control the data flow in network because it’s not serial. So we need to record the values on EVERY point instead of the current point.</p>
+<p>And finally, get the average of all the values of End Node and get the result, finishing one whole forwarding.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># just let result be the same variable type as x</span><br><span class="line">result = val[1]</span><br><span class="line">for end in end_node:</span><br><span class="line">    # sum up all value of the end node</span><br><span class="line">    result = result + val[end]</span><br><span class="line">result = result - val[1];</span><br><span class="line"></span><br><span class="line"># calculate the mean</span><br><span class="line">result = result / len(end_node)</span><br><span class="line"></span><br><span class="line"># calculate the output(classes)</span><br><span class="line">return self.net[-1](result)</span><br></pre></td></tr></table></figure>
+<p>It seems little complex, because the network structure isn’t serial anymore, and we need to forward it manually.</p>
+<h4 id="use-priority-replay"><a class="markdownIt-Anchor" href="#use-priority-replay"></a> Use Priority Replay</h4>
+<p>There is something special in this problem. We can get the reward only after the whole actions made. So the criti-actor network may not be useful to improve the performance of the controller. Besides Policy Grident, which the Controller uses, there are other methods like Proximal Policy Optimization(PPO), an off-policy method, and Deterministic Policy Gradient(DPG), and more, Deep Deterministic Policy Gradient(DDPG), an continuous-action-suitable method. Here I implement a method similar to Proximal Policy Optimization, that is, reuse the past experience.</p>
+<p>Because some experience may be important, such as high-reward action, we should let the controller learning from them sometimes so that it can performan better. So for every some eposes, we will let controller sample from memory.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># get the result</span></span><br><span class="line"><span class="keyword">if</span> i &gt; Memory_replay <span class="keyword">and</span> i % Memory_replay == <span class="number">0</span>:</span><br><span class="line">    m_index, prob, actions, m_reward, _ = memory_pool.sample(batch_size)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    prob, actions = policy(training)</span><br></pre></td></tr></table></figure>
+<p>Every experience has a priority defined by its reward, and sampled in a probabilistic manner according to the priority.</p>
+<p>We use a data structure named sumtree to implementation, as shown in the following Figure. Its idea is simple: cut a line into many parts and place the experience on it. And the length of the part depend on its priority. And randomly chose a position, and sample the experience to which the position belongs. And we use a tree structure to maintain the experience adding and priority updating.</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="sumtree.png" alt="Sumtree" /></p>
+<h4 id="using-cuda-to-speed-up-training"><a class="markdownIt-Anchor" href="#using-cuda-to-speed-up-training"></a> Using Cuda to Speed up training</h4>
+<p>It is very common to use GPU to speed up training, and thanks to <a href="https://pytorch.org" rel="external nofollow noreferrer">Pytorch</a>, it’s very easy to train it on GPU, that is, transfer the data from RAM to GPU, and let GPU process.</p>
+<p>According to the actual measurement, which will explain next, it takes <code>16 hours</code> to complete <code>500 eposes</code> of training with CPU and only <code>2 hours</code> with GPU. It’s nearly eight times faster.</p>
+<h3 id="result"><a class="markdownIt-Anchor" href="#result"></a> Result</h3>
+<p>In order to better show the effect of the improvement, I will test them in emotion classification, a typical problem in the field of Natural Language Processing(NLP).</p>
+<p>The <a href="https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews" rel="external nofollow noreferrer">data(click to download)</a><br />
+are reviews of movies, and they are all labled to indicate whether they are positive or negative. We need to train a neural network so that for a movie review, the network can tell us whether it is positive or negative.</p>
+<p>And the task the controller should do is to generate a good network structure.</p>
+<p>And the task we should do is to train the controller so that it will generate a good network with good parameters.</p>
+<p>After the cleaning of data and encoding using <a href="https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip" rel="external nofollow noreferrer">word2vec</a>, we get a vector represented a review which can be input into network.</p>
+<p>Due to the limitation of time and the performance of GPU, I use the first <code>1000</code> reviews, in which the first <code>600</code> is used as trained datas and the next <code>400</code> is used as test datas. After <code>500</code> eposes, and batch size <code>4</code>, using three version: origin version, improved version, improved + replay version, here is the result.</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="accuracy.png" alt="Accuracy" /></p>
+<p>The above Figure show the accuracy of the network generated by Controller and the following Figure  show the reward and loss of Controller.</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="reward.png" alt="reward" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="loss.png" alt="loss" /></p>
+<p>It’s clearly that the <a href="https://github.com/RualPerez/AutoML" rel="external nofollow noreferrer">origin version</a> is very funny. Although it trains very fast—only 30 minutes using CPU, but seems to learn nothing. I just fix the bugs mention above and run it. And the version with replay performs slightly better than the version without replay. It can see that in eposes 500 the version with replay still has an upward trend.</p>
+<h3 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h3>
+<p>From this result, I know the necessity of my improvement: modify the network structure, increase parameter sharing, and add memory replay. Maybe the reason of the poor performance at starting is the insufficient training due to the device performance limited. But thanks to the parameters sharing, the parameters can be trained next time the new network generated, the accuracy and the reward will improve. Also, with reinforcement learning, the Controller can learn from network structure better. From the NLP practics, it’s useful for us to find a good network structure using the improved Controller.</p>
+<p>Use a neural network to generate a neural network is an amazing thing. There is still some thing can be improved such as loading trained model, using more efficient policy gradient.</p>
+<p>You can access the code in <a href="https://github.com/Lanly109/ENAS" rel="external nofollow noreferrer">my github</a>.</p>
+<h3 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h3>
+<ul>
+<li>Xuanyi Dong,David Jacob Kedziora, Katarzyna Musial, and Bogdan Gabrys. Automated deep learning: Neural architecture search is not the end. CoRR, abs/2112.09245, 2021.</li>
+<li>Zhenhan Huang, Chunheng Jiang, Pin-Yu Chen, and Jianxi Gao. Network graph based neural architecture search. CoRR, abs/2112.07805, 2021.</li>
+<li>Hieu Pham, Melody Y. Guan, Barret Zoph, Quoc V. Le, and Jeff Dean. Efficient neural architecture search via parameter sharing. CoRR, abs/1802.03268, 2018.</li>
+<li>Kaixiong Zhou, Qingquan Song, Xiao Huang, and Xia Hu. Auto-gnn: Neural architec- ture search of graph neural networks. CoRR, abs/1909.03184, 2019.</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>Deep Reinforcement Learning for ENAS</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a href="http://blog.lanly.vip/posts/2d0ac27e.html">http://blog.lanly.vip/posts/2d0ac27e.html</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>作者</h><div class="post-copyright-cc-info"><h>Lanly</h></div></div><div class="post-copyright-c"><h>发布于</h><div class="post-copyright-cc-info"><h>2022-06-14</h></div></div><div class="post-copyright-u"><h>更新于</h><div class="post-copyright-cc-info"><h>2025-08-19</h></div></div><div class="post-copyright-c"><h>许可协议</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener external nofollow noreferrer" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener external nofollow noreferrer" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ENAS/">ENAS</a><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/Cuda/">Cuda</a></div><div class="post_share"><div class="social-share" data-image="/img/chino/vec/chino72.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/2bf18a0f.html" title="基于UDP的文件传输程序"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-06</div><div class="title">基于UDP的文件传输程序</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#experimental-environment"><span class="toc-number">1.</span> <span class="toc-text"> Experimental Environment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#experimental-problems"><span class="toc-number">2.</span> <span class="toc-text"> Experimental Problems</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#solution"><span class="toc-number">3.</span> <span class="toc-text"> Solution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#what-is-neural-architecture-searchnas"><span class="toc-number">3.1.</span> <span class="toc-text"> What is Neural Architecture Search(NAS)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#what-is-efficient-neural-architecture-searchenas"><span class="toc-number">3.2.</span> <span class="toc-text"> What is Efficient Neural Architecture Search(ENAS)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#the-framework-of-enas"><span class="toc-number">3.3.</span> <span class="toc-text"> The Framework of ENAS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#problems-in-the-paper-reproduction-code"><span class="toc-number">3.4.</span> <span class="toc-text"> Problems in the paper reproduction code</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#it-cannt-run"><span class="toc-number">3.4.1.</span> <span class="toc-text"> It cann’t run</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#it-doesnt-have-parameter-sharing"><span class="toc-number">3.4.2.</span> <span class="toc-text"> It doesn’t have parameter sharing</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#its-searching-space-is-slightly-different"><span class="toc-number">3.4.3.</span> <span class="toc-text"> Its searching space is slightly different</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#there-is-some-difference-between-code-and-artical"><span class="toc-number">3.4.4.</span> <span class="toc-text"> There is some difference between code and artical</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#redundant-dependency-in-requirementtxt"><span class="toc-number">3.4.5.</span> <span class="toc-text"> Redundant dependency in requirement.txt</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#improvement"><span class="toc-number">3.5.</span> <span class="toc-text"> Improvement</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#add-parameters-sharing-feature"><span class="toc-number">3.5.1.</span> <span class="toc-text"> Add parameters sharing feature</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#change-chains-to-graph"><span class="toc-number">3.5.2.</span> <span class="toc-text"> Change chains to Graph</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#use-priority-replay"><span class="toc-number">3.5.3.</span> <span class="toc-text"> Use Priority Replay</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#using-cuda-to-speed-up-training"><span class="toc-number">3.5.4.</span> <span class="toc-text"> Using Cuda to Speed up training</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#result"><span class="toc-number">3.6.</span> <span class="toc-text"> Result</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#conclusion"><span class="toc-number">3.7.</span> <span class="toc-text"> Conclusion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reference"><span class="toc-number">3.8.</span> <span class="toc-text"> Reference</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Lanly</div><div class="framework-info"><span>框架 </span><a href="https://hexo.io" rel="external nofollow noreferrer">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" rel="external nofollow noreferrer">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" rel="external nofollow noreferrer" target="_blank">粤ICP备2021014426</a></div><script type="text/javascript" id="maid-script" src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js?v=undefined"></script><script>if (window.mermaid) {
+  var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptioins'));
+  mermaid.initialize(options);
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    btf.addModeChange('mermaid', () => {
+      window.runMermaid()
+    })
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><script defer src="/js/light.js"></script><script defer src="/js/universe.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer src="/js/homeessay.js"></script><canvas id="universe"></canvas><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('bbTimeList');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino58.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-06-06</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">Webots——Fianl大作业</a><div class="blog-slider__text">小组合作作业</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-05-01</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">滚榜程序Resolver源码阅读</a><div class="blog-slider__text">太难了.jpg</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterend",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>

@@ -1,0 +1,550 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SCIP教程 | Lanlyの小窝</title><meta name="author" content="Lanly"><meta name="copyright" content="Lanly"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="SCIP和对应库的安装使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SCIP教程">
+<meta property="og:url" content="http://blog.lanly.vip/posts/ea1b0e33.html">
+<meta property="og:site_name" content="Lanlyの小窝">
+<meta property="og:description" content="SCIP和对应库的安装使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.lanly.vip/img/chino/vec/chino41.jpg">
+<meta property="article:published_time" content="2024-06-03T10:23:12.000Z">
+<meta property="article:modified_time" content="2025-08-19T07:22:39.116Z">
+<meta property="article:author" content="Lanly">
+<meta property="article:tag" content="SCIP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.lanly.vip/img/chino/vec/chino41.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.lanly.vip/posts/ea1b0e33.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SCIP教程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-19 15:22:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/var.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/menuicon.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/essay.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/home_essay_bar.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Lanlyの小窝" type="application/atom+xml">
+</head><body><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><div class="loading-img"></div><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+
+preloader.initLoading()
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><script async="async" data-pjax="data-pjax" src="/js/WaterRipple.js"></script><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/chino/vec/chino41.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Lanlyの小窝"><span class="site-name">Lanlyの小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw menuicon icon-yunkongjian"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-yuedu"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw menuicon icon-fazhanlicheng"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw menuicon icon-zhuti"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw menuicon icon-wenjianguanli"></i><span> 归档</span></a></li><li><a class="site-page child" href="/charts/"><i class="fa-fw menuicon icon-yundongjiankang"></i><span> 统计</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-gaodeditu"></i><span> 导航</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw menuicon icon-shenghuofuwu"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw menuicon icon-wanjijiqiao"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw menuicon icon-lunbotu"></i><span> 画廊</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SCIP教程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-03T10:23:12.000Z" title="发表于 2024-06-03 18:23:12">2024-06-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-19T07:22:39.116Z" title="更新于 2025-08-19 15:22:39">2025-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%A7%91%E7%A0%94/">科研</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SCIP教程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="scip是什么"><a class="markdownIt-Anchor" href="#scip是什么"></a> SCIP是什么</h2>
+<p>SCIP（Solving Constraint Integer Programs）是一个用于求解约束整数规划（Constraint Integer Programming，CIP）问题的优化软件框架。它结合了混合整数线性规划（MILP）、混合整数非线性规划（MINLP）以及约束规划（CP）技术，广泛应用于学术研究和工业优化中。SCIP不仅能够处理线性和非线性约束，还支持用户自定义约束和启发式算法，从而提供了灵活且强大的优化能力。</p>
+<p>SCIP Optimization是一套用于生成和求解混合整数非线性规划（MINLP）、混合整数线性规划（MILP）以及整数约束规划（CIP）模型的优化工具。它由多个强大且灵活的组件组成，支持多种优化需求。以下是各组件的简要介绍及其在优化过程中的应用：</p>
+<ol>
+<li>
+<p><strong>SCIP</strong>：</p>
+<ul>
+<li><strong>简介</strong>：SCIP（Solving Constraint Integer Programs）是一个集成了混合整数线性规划、混合整数非线性规划和约束规划的求解器和框架。</li>
+<li><strong>功能</strong>：支持用户定义的约束和启发式算法，能够处理复杂的优化问题，包括线性和非线性约束。</li>
+<li><strong>使用</strong>：用户可以通过C、C++、Python等编程语言接口使用SCIP，或通过数学建模语言ZIMPL来定义优化问题。</li>
+</ul>
+</li>
+<li>
+<p><strong>SoPlex</strong>：</p>
+<ul>
+<li><strong>简介</strong>：SoPlex是一个高性能的线性规划（LP）求解器。</li>
+<li><strong>功能</strong>：解决大型线性规划问题，提供精确的单纯形法和内点法。</li>
+<li><strong>使用</strong>：与SCIP无缝集成，为MILP和MINLP提供高效的线性松弛解法。</li>
+</ul>
+</li>
+<li>
+<p><strong>ZIMPL</strong>：</p>
+<ul>
+<li><strong>简介</strong>：ZIMPL是一个用于定义数学规划模型的建模语言。</li>
+<li><strong>功能</strong>：支持简洁地表达线性和非线性优化模型，生成SCIP和其他求解器可以读取的模型文件。</li>
+<li><strong>使用</strong>：用户通过编写ZIMPL脚本，定义优化变量、约束和目标函数。</li>
+</ul>
+</li>
+<li>
+<p><strong>UG</strong>：</p>
+<ul>
+<li><strong>简介</strong>：UG（Ubiquity Generator）是一个用于并行求解混合整数（线性和非线性）规划问题的框架。</li>
+<li><strong>功能</strong>：利用多核处理器或计算集群加速求解过程，适用于大规模优化问题。</li>
+<li><strong>使用</strong>：配置并行求解环境，通过SCIP调用UG实现并行化求解。</li>
+</ul>
+</li>
+<li>
+<p><strong>GCG</strong>：</p>
+<ul>
+<li><strong>简介</strong>：GCG（Generic Branch-Cut-and-Price Solver）是一个通用的分支切割定价求解器。</li>
+<li><strong>功能</strong>：专注于大规模分配和调度问题，通过分支定界和割平面方法有效求解。</li>
+<li><strong>使用</strong>：与SCIP集成，为特定类型的优化问题提供专业化的求解方法。</li>
+</ul>
+</li>
+</ol>
+<p><strong>SCIP Optimization使用步骤</strong>：</p>
+<ol>
+<li>
+<p><strong>建模</strong>：</p>
+<ul>
+<li>使用ZIMPL语言编写模型，定义变量、目标函数和约束条件。</li>
+<li>或者直接在编程语言（如C、C++、Python）中使用SCIP API构建模型。</li>
+</ul>
+</li>
+<li>
+<p><strong>配置求解器</strong>：</p>
+<ul>
+<li>根据问题特点配置SCIP参数，如启发式算法、剪枝策略等。</li>
+<li>如果问题较大，考虑使用UG进行并行求解。</li>
+</ul>
+</li>
+<li>
+<p><strong>求解问题</strong>：</p>
+<ul>
+<li>调用SCIP求解器进行优化，获取最优解。</li>
+<li>使用SoPlex求解线性松弛问题，以提高整体求解效率。</li>
+</ul>
+</li>
+<li>
+<p><strong>分析结果</strong>：</p>
+<ul>
+<li>提取和分析SCIP求解结果，检查解的有效性和最优性。</li>
+<li>结合业务需求对优化结果进行应用和调整。</li>
+</ul>
+</li>
+</ol>
+<p>SCIP Optimization套件因其灵活性和强大的求解能力，广泛应用于调度、物流、金融、能源等领域的复杂优化问题中。通过各组件的协同工作，用户可以高效地构建、求解和分析优化模型，满足各种实际应用需求。</p>
+<h2 id="如何获取scip"><a class="markdownIt-Anchor" href="#如何获取scip"></a> 如何获取SCIP</h2>
+<p>SCIP可以在其<a href="https://scipopt.org/index.php#download" rel="external nofollow noreferrer">官网</a>下载，支持<code>Windows</code>,<code>Linux</code>和<code>Mac</code>。有源码（Source Code）下载和预编译包（Precompiled Packages）下载方式。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240602161127647.png" alt="image-20240602161127647" /></p>
+<p>选择SCIP版本和平台。</p>
+<p>如果仅为了使用，推荐通过预编译包安装，而如果为了结合其他编程语言，比如<code>C++,Python</code>，则推荐为源码安装。</p>
+<h3 id="预编译包安装"><a class="markdownIt-Anchor" href="#预编译包安装"></a> 预编译包安装</h3>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240602161233568.png" alt="image-20240602161233568" /></p>
+<p>预编译包安装。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240602162325213.png" alt="image-20240602162325213" /></p>
+<p>下载需要填写带星号的信息后，点击<code>Start Download</code>后开始下载。</p>
+<p>安装时，推荐添加SCIP路径到环境变量<code>PATH</code>中。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240602163534024.png" alt="image-20240602163534024" /></p>
+<p>随后打开<code>cmd</code>，输入<code>scip</code>，即可进入<code>SCIP</code>交互界面</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240602163943283.png" alt="image-20240602163943283" /></p>
+<h3 id="源码安装"><a class="markdownIt-Anchor" href="#源码安装"></a> 源码安装</h3>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240602161202827.png" alt="image-20240602161202827" /></p>
+<p>源码安装，第一个是scip套件。然后遵循<a href="https://scipopt.org/doc/html/md_INSTALL.php" rel="external nofollow noreferrer">这里</a>的指令。</p>
+<h4 id="windows"><a class="markdownIt-Anchor" href="#windows"></a> Windows</h4>
+<p>对于<code>Windows</code>下的源码安装，可以借助于<code>Cmake GUI</code>安装，或者命令行</p>
+<figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">cmake -Bbuild -H. </span><br><span class="line">cmake --build build --config Release [Debug]</span><br></pre></td></tr></table></figure>
+<p><code>[x]</code>表示参数<code>x</code>是可选择的。</p>
+<h4 id="linuxmacos"><a class="markdownIt-Anchor" href="#linuxmacos"></a> Linux,MacOS</h4>
+<p>源码编译需要一些依赖工具，对于使用<code>apt</code>作为包管理工具的系统，可以通过以下指令安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install wget cmake g++ m4 xz-utils libgmp-dev unzip zlib1g-dev libboost-program-options-dev libboost-serialization-dev libboost-regex-dev libboost-iostreams-dev libtbb-dev libreadline-dev pkg-config git liblapack-dev libgsl-dev flex bison libcliquer-dev gfortran file dpkg-dev libopenblas-dev rpm</span><br></pre></td></tr></table></figure>
+<p>然后，通过以下命令安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar xvzf scip-x.y.z.tgz                                                       <span class="comment"># 解压下载的源码包，x,y,z替换为对应的版本</span></span><br><span class="line"><span class="built_in">cd</span> scip-x.y.z                                                                 <span class="comment"># 进入解压后的文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> build                                                                   <span class="comment"># 创建build文件夹</span></span><br><span class="line"><span class="built_in">cd</span> build                                                                      <span class="comment"># 进入build文件夹</span></span><br><span class="line">cmake .. -DCMAKE_INSTALL_PREFIX=&lt;install/dir&gt;                                 <span class="comment"># 编译配置安装路径</span></span><br><span class="line">make                                                                          <span class="comment"># 开始编译</span></span><br><span class="line">make check                                                                    <span class="comment"># (推荐可选) 测试生成文件</span></span><br><span class="line">make install                                                                  <span class="comment"># (可选) 复制编译出来的SCIP到CMAKE_INSTALL_PREFIX</span></span><br></pre></td></tr></table></figure>
+<p>最后在<code>bash</code>输入<code>SCIP</code>即可启动。</p>
+<h2 id="scip的简单使用"><a class="markdownIt-Anchor" href="#scip的简单使用"></a> SCIP的简单使用</h2>
+<p>在<code>SCIP</code>界面，可通过输入<code>help</code>查看帮助。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240603134606188.png" alt="image-20240603134606188" /></p>
+<p>我们可以通过<code>read</code>指令读取一个问题，我们创建一个<code>exmaple.lp</code>文件，内容为</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Maximize</span><br><span class="line"> obj: x1 + 2 x2 + 3 x3 + x4</span><br><span class="line">Subject To</span><br><span class="line"> c1: - x1 + x2 + x3 + 10 x4 &lt;= 20</span><br><span class="line"> c2: x1 - 3 x2 + x3 &lt;= 30</span><br><span class="line"> c3: x2 - 3.5 x4 = 0</span><br><span class="line">Bounds</span><br><span class="line"> 0 &lt;= x1 &lt;= 40</span><br><span class="line"> 2 &lt;= x4 &lt;= 3</span><br><span class="line">General</span><br><span class="line"> x4</span><br><span class="line">End</span><br></pre></td></tr></table></figure>
+<p>在同目录下，我们输入<code>scip</code>启动，然后输出</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">read example.lp		# 读取问题</span><br><span class="line">optimize			# 问题求解</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240603135335745.png" alt="image-20240603135335745" /></p>
+<p>最后的<code>Gap</code>为零说明求得了最优解，而最优的目标函数值为<code>1.225e2</code>，且搜到了三个可行解，输入<code>display solution</code>可得到最优解的变量取值。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240603140453195.png" alt="image-20240603140453195" /></p>
+<p>输入<code>display sols</code>后输入<code>0</code>或<code>1</code>或<code>2</code>可以打印出对应可行解的取值。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240603140827526.png" alt="image-20240603140827526" /></p>
+<p>可以看到这里的可行解的目标函数值与求解过程中表格里的<code>primalbound</code>的的数值是一致的。</p>
+<h2 id="scip与python的结合"><a class="markdownIt-Anchor" href="#scip与python的结合"></a> SCIP与Python的结合</h2>
+<p>要在<code>Python</code>中使用<code>SCIP</code>，需要借助<a href="https://github.com/scipopt/PySCIPOpt" rel="external nofollow noreferrer">PySCIPOpt</a>库，可以通过以下命令安装。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip3 install pyscipopt</span><br></pre></td></tr></table></figure>
+<p>安装前需要设置环境变量<code>SCIPOPTDIR</code>为<code>SCIP</code>的安装路径，以便让库能正确与<code>SCIP</code>相结合。</p>
+<p><code>SCIP</code>的安装路径应形如以下格式</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SCIPOPTDIR</span><br><span class="line">  &gt; lib</span><br><span class="line">    &gt; libscip.so (或linscip.dll) ...</span><br><span class="line">  &gt; include</span><br><span class="line">    &gt; scip</span><br><span class="line">    &gt; lpi</span><br><span class="line">    &gt; nlpi</span><br><span class="line">    &gt; ...</span><br></pre></td></tr></table></figure>
+<p>设置环境变量的方法为</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> SCIPOPTDIR=&lt;path_to_install_dir&gt; (Linux, OS X)</span><br><span class="line"><span class="built_in">set</span> SCIPOPTDIR=&lt;path_to_install_dir&gt; (cmd, Cmder, WSL)</span><br><span class="line"><span class="variable">$Env</span>:SCIPOPTDIR = <span class="string">&quot;&lt;path_to_install_dir&gt;&quot;</span> (powershell)</span><br></pre></td></tr></table></figure>
+<p>将<code>&lt;path_to_install_dir&gt;</code>替换为<code>SCIP</code>安装路径即可。</p>
+<p>不同大版本适应不同版本的<code>SCIP</code>，需根据<code>SCIP</code>选择对应版本的<code>PySCIPOpt</code>。</p>
+<table>
+<thead>
+<tr>
+<th>SCIP</th>
+<th>PySCIPOpt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9.0</td>
+<td>5.x</td>
+</tr>
+<tr>
+<td>8.0</td>
+<td>4.x</td>
+</tr>
+<tr>
+<td>7.0</td>
+<td>3.x</td>
+</tr>
+<tr>
+<td>6.0</td>
+<td>2.x</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td>1.4, 1.3</td>
+</tr>
+<tr>
+<td>4.0</td>
+<td>1.2, 1.1</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+<p>然后创建一个<code>example.py</code>，输入以下内容</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pyscipopt <span class="keyword">import</span> Model</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建模型</span></span><br><span class="line">model = Model(<span class="string">&quot;example&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义变量及其上下界</span></span><br><span class="line">x1 = model.addVar(<span class="string">&quot;x1&quot;</span>, vtype=<span class="string">&quot;C&quot;</span>, lb=<span class="number">0</span>, ub=<span class="number">40</span>)</span><br><span class="line">x2 = model.addVar(<span class="string">&quot;x2&quot;</span>, vtype=<span class="string">&quot;C&quot;</span>)</span><br><span class="line">x3 = model.addVar(<span class="string">&quot;x3&quot;</span>, vtype=<span class="string">&quot;C&quot;</span>)</span><br><span class="line">x4 = model.addVar(<span class="string">&quot;x4&quot;</span>, vtype=<span class="string">&quot;I&quot;</span>, lb=<span class="number">2</span>, ub=<span class="number">3</span>)  <span class="comment"># x4为整数变量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标函数</span></span><br><span class="line">model.setObjective(x1 + <span class="number">2</span>*x2 + <span class="number">3</span>*x3 + x4, <span class="string">&quot;maximize&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加约束</span></span><br><span class="line">model.addCons(-x1 + x2 + x3 + <span class="number">10</span>*x4 &lt;= <span class="number">20</span>, <span class="string">&quot;c1&quot;</span>)</span><br><span class="line">model.addCons(x1 - <span class="number">3</span>*x2 + x3 &lt;= <span class="number">30</span>, <span class="string">&quot;c2&quot;</span>)</span><br><span class="line">model.addCons(x2 - <span class="number">3.5</span>*x4 == <span class="number">0</span>, <span class="string">&quot;c3&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 求解模型</span></span><br><span class="line">model.optimize()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查是否找到最优解</span></span><br><span class="line"><span class="keyword">if</span> model.getStatus() == <span class="string">&quot;optimal&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Optimal solution found:&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;x1 = <span class="subst">&#123;model.getVal(x1)&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;x2 = <span class="subst">&#123;model.getVal(x2)&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;x3 = <span class="subst">&#123;model.getVal(x3)&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;x4 = <span class="subst">&#123;model.getVal(x4)&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Optimal solution not found!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>然后<code>python3 example.py</code>运行</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="image-20240603143500455.png" alt="image-20240603143500455" /></p>
+<p>结果和上述<code>SCIP</code>的结果一致。</p>
+<h2 id="scip与神经网络的结合"><a class="markdownIt-Anchor" href="#scip与神经网络的结合"></a> SCIP与神经网络的结合</h2>
+<p><a href="https://www.ecole.ai/" rel="external nofollow noreferrer">Ecole</a>（Efficient Combinatorial Optimization Learning Environment）是一个专为结合SCIP和神经网络的研究和应用而设计的库。它为在组合优化问题中利用机器学习提供了一个灵活且高效的框架。以下是ECole库的主要功能和特点：</p>
+<h3 id="ecole的主要特点"><a class="markdownIt-Anchor" href="#ecole的主要特点"></a> ECole的主要特点</h3>
+<ol>
+<li>
+<p><strong>整合优化与学习</strong>：</p>
+<ul>
+<li>ECole允许将优化求解与机器学习模型无缝集成，支持在优化过程中引入机器学习方法，以增强求解性能。</li>
+</ul>
+</li>
+<li>
+<p><strong>环境与任务</strong>：</p>
+<ul>
+<li>ECole定义了一系列优化环境和任务，这些任务可以是传统的组合优化问题，也可以是经过扩展的、更具挑战性的问题。这些任务和环境可以直接与强化学习算法结合使用。</li>
+</ul>
+</li>
+<li>
+<p><strong>多样化的观察与反馈</strong>：</p>
+<ul>
+<li>ECole提供丰富的观察和反馈机制，使用户可以根据需求定制优化过程中的信息收集方式。这有助于在优化过程中动态调整策略。</li>
+</ul>
+</li>
+<li>
+<p><strong>高效的实现</strong>：</p>
+<ul>
+<li>ECole采用高效的数据结构和算法，确保在求解大规模优化问题时的性能和可扩展性。</li>
+</ul>
+</li>
+</ol>
+<p>要安装<code>Ecole</code>，首先设置好环境变量<code>SCIP_DIR</code>为<code>SCIP</code>的安装路径，然后输入以下指令安装。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip3 install ecole</span><br></pre></td></tr></table></figure>
+<p>注意，该库暂不支持<code>Windows</code>系统。</p>
+<p>该库不依赖<code>PyScipOpt</code>，但如果需要自定义<code>Ecole</code>里的模块，则仍需依赖<code>PyScipOpt</code>开发。</p>
+<h3 id="ecole的简单使用"><a class="markdownIt-Anchor" href="#ecole的简单使用"></a> Ecole的简单使用</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ecole</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化Ecole环境</span></span><br><span class="line">env = ecole.environment.Branching()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个优化实例生成器</span></span><br><span class="line">instance_generator = ecole.instance.SetCoverGenerator()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    <span class="comment"># 生成一个问题实例</span></span><br><span class="line">    instance = <span class="built_in">next</span>(instance_generator)</span><br><span class="line">    <span class="comment"># 初始化环境</span></span><br><span class="line">    observation, action_set, reward_offset, done, info = env.reset(instance)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> done:</span><br><span class="line">        <span class="comment"># 进行分支定界中的变量选择操作，observation就是当前要分支的子问题</span></span><br><span class="line">        observation, action_set, reward, done, info = env.step(action_set[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p><code>Ecole</code>类似于<code>OpenAI</code>里的<code>GYM</code>用法，将用分支定界算法求解混合整数线性规划问题抽象成一个序列决策的马尔科夫过程，期间的<code>Observation</code>是对当前子问题的一个描述，它可以是一个二分图表示法，进而作为一个图卷积神经网络的输入，得到动作，即选择的变量。</p>
+<h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
+<p>综上所述，<code>SCIP</code>（Solving Constraint Integer Programs）及其相关组件（<code>SoPlex</code>、<code>ZIMPL</code>、<code>UG</code>、<code>GCG</code>）提供了一个强大且灵活的优化框架，能够有效解决复杂的混合整数规划问题。通过结合<code>SCIP</code>和<code>Python</code>（如使用<code>PySCIPOpt</code>库），用户可以轻松地在编程环境中构建和求解优化模型。此外，<code>Ecole</code>库进一步拓展了<code>SCIP</code>的应用范围，使其能够与机器学习特别是强化学习方法相结合，提供了在组合优化问题上进行深入研究和创新的工具。这些工具在学术研究和工业应用中都有广泛的用途，帮助解决各种实际优化问题，提升决策和资源分配的效率。</p>
+</article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>SCIP教程</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a href="http://blog.lanly.vip/posts/ea1b0e33.html">http://blog.lanly.vip/posts/ea1b0e33.html</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>作者</h><div class="post-copyright-cc-info"><h>Lanly</h></div></div><div class="post-copyright-c"><h>发布于</h><div class="post-copyright-cc-info"><h>2024-06-03</h></div></div><div class="post-copyright-u"><h>更新于</h><div class="post-copyright-cc-info"><h>2025-08-19</h></div></div><div class="post-copyright-c"><h>许可协议</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener external nofollow noreferrer" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener external nofollow noreferrer" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SCIP/">SCIP</a></div><div class="post_share"><div class="social-share" data-image="/img/chino/vec/chino41.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/b5f500a.html" title="MILP-StuDio"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino26.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-07</div><div class="title">MILP-StuDio</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#scip%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text"> SCIP是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96scip"><span class="toc-number">2.</span> <span class="toc-text"> 如何获取SCIP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%84%E7%BC%96%E8%AF%91%E5%8C%85%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text"> 预编译包安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text"> 源码安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#windows"><span class="toc-number">2.2.1.</span> <span class="toc-text"> Windows</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linuxmacos"><span class="toc-number">2.2.2.</span> <span class="toc-text"> Linux,MacOS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scip%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text"> SCIP的简单使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scip%E4%B8%8Epython%E7%9A%84%E7%BB%93%E5%90%88"><span class="toc-number">4.</span> <span class="toc-text"> SCIP与Python的结合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scip%E4%B8%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E7%BB%93%E5%90%88"><span class="toc-number">5.</span> <span class="toc-text"> SCIP与神经网络的结合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ecole%E7%9A%84%E4%B8%BB%E8%A6%81%E7%89%B9%E7%82%B9"><span class="toc-number">5.1.</span> <span class="toc-text"> ECole的主要特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ecole%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-number">5.2.</span> <span class="toc-text"> Ecole的简单使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By Lanly</div><div class="framework-info"><span>框架 </span><a href="https://hexo.io" rel="external nofollow noreferrer">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" rel="external nofollow noreferrer">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" rel="external nofollow noreferrer" target="_blank">粤ICP备2021014426</a></div><script type="text/javascript" id="maid-script" src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js?v=undefined"></script><script>if (window.mermaid) {
+  var options = JSON.parse(document.getElementById('maid-script').getAttribute('mermaidoptioins'));
+  mermaid.initialize(options);
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    btf.addModeChange('mermaid', () => {
+      window.runMermaid()
+    })
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script></div><script defer src="/js/light.js"></script><script defer src="/js/universe.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer src="/js/homeessay.js"></script><canvas id="universe"></canvas><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('bbTimeList');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino58.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-06-06</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">Webots——Fianl大作业</a><div class="blog-slider__text">小组合作作业</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/10a3c0f3.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chino/vec/chino4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-05-01</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">滚榜程序Resolver源码阅读</a><div class="blog-slider__text">太难了.jpg</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/7b2538bb.html&quot;);" href="javascript:void(0);" rel="external nofollow noreferrer" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterend",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>
